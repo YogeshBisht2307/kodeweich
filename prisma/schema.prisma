@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Articles {
+    id             String                  @default(cuid()) @id
+    title          String
+    slug           String                  @unique
+    description    String
+    featuredImage  String
+    featuredPost   Boolean                 @default(false)
+    content        String
+    published      Boolean                 @default(false)
+    createdAt      DateTime                @default(now()) @map(name: "created_at")
+    updatedAt      DateTime                @updatedAt @map(name: "updated_at")
+    author         Users                   @relation(fields: [authorId], references: [id])
+    authorId       String
+    categories     Categories []
+    tags           Tags []
+}
+
+model Users {
+  id            String      @default(cuid()) @id
+  name          String
+  email         String      @unique
+  bio           String?
+  image         String?
+  createdAt     DateTime    @default(now()) @map(name: "created_at")
+  updatedAt     DateTime    @updatedAt @map(name: "updated_at")
+  articles      Articles[]
+}
+
+model Tags {
+  id            String    @default(cuid()) @id
+  title         String
+  slug          String    @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  articles      Articles []
+}
+
+model Categories {
+  id            String                  @default(cuid()) @id
+  title         String
+  slug          String                  @unique
+  createdAt     DateTime                @default(now()) @map(name: "created_at")
+  updatedAt     DateTime                @updatedAt @map(name: "updated_at")
+  articles      Articles []
+}
