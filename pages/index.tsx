@@ -88,7 +88,7 @@ const Home: NextPageWithLayout = () => {
                 dark:text-slate-500
                 mb-6 lg:mb-8
               `}>
-              Learn the fundamentals of Django web framework and JavaScript programming language and build full-featured web applications using both technologies by the end of the course. Let's get started!
+              Learn the fundamentals of Django web framework and JavaScript programming language and build full-featured web applications using both technologies by the end of the course. Let&apos;s get started!
             </p>
           </div>
           <div className=''>
