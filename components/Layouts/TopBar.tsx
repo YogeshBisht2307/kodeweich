@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Inter } from '@next/font/google';
 import Link from "next/link";
 import Image from "next/image";
-import styles from '../../styles/Home.module.css'
 import companyLogo from '../../assets/images/logo.png';
 import compnayLogoDark from '../../assets/images/logodark.png'
 
@@ -30,16 +29,16 @@ const TopBar: React.FC<ITopBar> = () => {
           document.documentElement.classList.add("dark");
         }
     }, [])
-  
+
     return (
         <header className={'max-w-4xl mx-auto px-4 py-4'}>
             <nav className={'flex flex-row items-center justify-between'}>
-                <div className='w-[40px] sm:w-[50px]'>
+                <div className='w-[45px] sm:w-[50px] transform hover:scale-[1.1] transition-all'>
                     <Link href='/'><Image src={theme == 'light' ? companyLogo : compnayLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
                 </div>
                 <ul className={'flex flex-row md:space-x-8'}>
-                    <li 
-                        className={`
+                    <li>
+                        <Link className={`
                             ${inter.className}
                             dark:text-slate-300
                             text-slate-800
@@ -49,12 +48,13 @@ const TopBar: React.FC<ITopBar> = () => {
                             dark:hover:bg-slate-800
                             hover:bg-slate-200
                             rounded
+                            transform hover:scale-[1.05]
+                            transition-all
                             py-1 px-2 sm:px-4
-                        `}>
-                        <Link href="/about">ABOUT</Link>
+                        `} href="/about">ABOUT</Link>
                     </li>
-                    <li 
-                        className={`
+                    <li>
+                        <Link className={`
                             ${inter.className}
                             dark:text-slate-300
                             text-slate-800
@@ -64,9 +64,10 @@ const TopBar: React.FC<ITopBar> = () => {
                             dark:hover:bg-slate-800
                             hover:bg-slate-200
                             rounded
+                            transform hover:scale-[1.05]
+                            transition-all
                             py-1 px-2 sm:px-4
-                        `}>
-                        <Link href="/about">CONNECT</Link>
+                        `} href="/connect">CONNECT</Link>
                     </li>
                 </ul>
                 <div className={`${inter.className} flex flex-row justify-around space-x-2 md:space-x-4`}>
@@ -75,7 +76,8 @@ const TopBar: React.FC<ITopBar> = () => {
                         type="button"
                         aria-label="Toggle Dark Mode"
                         onClick={handleThemeToggle}
-                        className="rounded-lg text-sm bg-gray-300 dark:bg-gray-700 p-2"
+                        className="rounded-lg text-sm bg-gray-300 dark:bg-gray-700 transform hover:scale-[1.05]
+                        transition-all p-2"
                         >
                         {
                             theme == 'light'
@@ -119,9 +121,11 @@ const TopBar: React.FC<ITopBar> = () => {
                             sm:font-medium
                             dark:text-slate-800
                             text-slate-200
+                            transform hover:scale-[1.03]
+                            transition-all
                             sm:py-2 sm:px-6 px-3 pt-2.5
                         `}
-                        href="/blog"
+                        href="/blogs"
                     >Blog</Link>
                 </div>
             </nav>

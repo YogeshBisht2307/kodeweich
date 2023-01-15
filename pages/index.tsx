@@ -1,15 +1,22 @@
 import { Inter } from '@next/font/google';
+import { NextPageWithLayout } from './page';
 import Image from 'next/image';
+import Head from 'next/head';
 import Link from 'next/link';
 import BaseLayout from '../components/Layouts/BaseLayout';
 import TopBar from '../components/Layouts/TopBar';
-import { NextPageWithLayout } from './page';
 import HeroImage from '../assets/images/hero.png'
-
+import Footer from '../components/Layouts/Footer';
+import BoxCard from '../components/Cards/BoxCard';
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Home: NextPageWithLayout = () => {
+  const featurePost = [
+    {"title": "Postgresql Master-Slave Replication Setup On EC2", "description": "The master-slave database replication is a process of copying (syncing) data from a database on one server (the master) to a database on another server (the slaves) ...", "url": "https://www.linkedin.com/pulse/postgresql-master-slave-replication-setup-ec2-yogesh-bisht/"},
+    {"title": "Introduction to Cloud PubSub and Use Case Scenario", "description": "Cloud Pub/Sub may be an easy topic from the coding point of view but implementing a system that can fully utilize its functionality may come across as a problem ...", "url": "https://www.linkedin.com/pulse/introduction-cloud-pubsub-use-case-scenario-yogesh-bisht/"},
+    {"title": "Automate Django Project Setup Using Bash Script", "description": "In this article, we are going to learn about some fantastic stuff that will reduce your overhead with setting up a Django application or any other python application...", "url": "https://code-material.blogspot.com/which-is-the-best-module-bundler-webpack-rollup-parcel"}
+  ]
   return (
     <section className={'max-w-4xl mx-auto py-8 px-4'}>
       <div className='flex sm:flex-row items-start flex-col-reverse justify-between sm:items-center'>
@@ -42,24 +49,17 @@ const Home: NextPageWithLayout = () => {
               Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!
             </p>
           </div>
-          <div className='w-[300px] md:w-[400px] relative mb-8 sm:mb-0'>
-            <Image src={HeroImage} width={400} alt={"kodeweich main screen image"}/>
+          <div className='w-[300px] md:w-[400px] relative transform hover:scale-[1.1] transition-all mb-8 sm:mb-0'>
+            <Image src={HeroImage} priority={true} width={400} alt={"kodeweich main screen image"}/>
           </div>
       </div>
 
       <div className='flex flex-col md:flex-row md:space-x-8 justify-between items-center my-4 py-12'>
-          <div className='border-[3px] rounded-tl-3xl rounded-br-3xl border-y-slate-300 border-x-pink-600 dark:border-y-slate-500 px-6 py-8 md:mb-0 mb-6'>
-            <h1 className="mb-4 text-4xl text-slate-800 sm:text-xl font-bold md:text-xl xl:text-xl dark:text-slate-300"><Link href="">Postgresql Master-Slave Replication Setup On EC2</Link></h1>
-            <p className="max-w-xl mb-4 font-sm text-slate-600 lg:mb-4 md:text-md lg:text-md dark:text-slate-500">The master-slave database replication is a process of copying (syncing) data from a database on one server (the master) to a database on another server (the slaves) ...</p>
-          </div>
-          <div className='border-[3px] rounded-tl-3xl rounded-br-3xl border-y-slate-300 border-x-pink-600 dark:border-y-slate-500 px-6 py-8 md:mb-0 mb-6'>
-            <h1 className="mb-4 text-4xl text-slate-800 sm:text-xl font-bold md:text-xl xl:text-xl dark:text-slate-300"><Link href="">Introduction to Cloud PubSub and Use Case Scenario</Link></h1>
-            <p className="max-w-xl mb-4 font-sm text-slate-600 lg:mb-4 md:text-md lg:text-md dark:text-slate-500">Cloud Pub/Sub may be an easy topic from the coding point of view but implementing a system that can fully utilize its functionality may come across as a problem ...</p>
-          </div>
-          <div className='border-[3px] rounded-tl-3xl rounded-br-3xl border-y-slate-300 border-x-pink-600 dark:border-y-slate-500 px-6 py-8 md:mb-0 mb-6'>
-            <h1 className="mb-4 text-4xl text-slate-800 sm:text-xl font-bold md:text-xl xl:text-xl dark:text-slate-300"><Link href="">Automate Django Project Setup Using Bash Script</Link></h1>
-            <p className="max-w-xl mb-4 font-sm text-slate-600 lg:mb-4 md:text-md lg:text-md dark:text-slate-500">In this article, we are going to learn about some fantastic stuff that will reduce your overhead with setting up a Django application or any other python application.</p>
-          </div>
+          {
+            featurePost.map((post, index) => (
+              <BoxCard post={post} key={index}/>
+            ))
+          }
       </div>
 
       <div className='flex flex-col justify-center'>
@@ -92,22 +92,31 @@ const Home: NextPageWithLayout = () => {
             </p>
           </div>
           <div className=''>
-            <Link className={inter.className} href='/blog'>
+            <Link className={inter.className} href='https://youtu.be/-NF-fWJXayw' target={"_blank"}>
               <div className='flex flex-row justify-between items-center py-3'>
                 <div className='flex items-center'>
-                  <div className="text-pink-600 font-extrabold text-left mr-6">01</div>
-                  <h4 className="text-lg font-bold w-full text-slate-800 dark:text-slate-300">Introduction to Django</h4>
+                  <div className="text-pink-500 font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">01</div>
+                  <h4 className="text-medium sm:text-lg font-bold w-full text-slate-800 dark:text-slate-300">Introduction to Django</h4>
                 </div>
-                <svg className='fill-pink-600' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z"/></svg>
+                <svg className='fill-pink-500 hover:fill-pink-700 transform hover:scale-[1.2] transition-all' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z"/></svg>
               </div>
             </Link>
-            <Link className={inter.className} href='/blog'>
+            <Link className={inter.className} href='https://youtu.be/tx7TnjZ_nVk' target={"_blank"}>
               <div className='flex flex-row justify-between items-center py-3'>
                 <div className='flex items-center'>
-                  <div className="text-pink-600 font-extrabold text-left mr-6">02</div>
-                  <h4 className="text-lg font-bold w-full text-slate-800 dark:text-slate-300">Introduction to JavaScript</h4>
+                  <div className="text-pink-500 font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">02</div>
+                  <h4 className="text-medium sm:text-lg font-bold w-full text-slate-800 dark:text-slate-300">Django data fetching and Queryset</h4>
                 </div>
-                <svg className='fill-pink-600' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z"/></svg>
+                <svg className='fill-pink-500 hover:fill-pink-700 transform hover:scale-[1.2] transition-all' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z"/></svg>
+              </div>
+            </Link>
+            <Link className={inter.className} href='https://youtu.be/H-kwLD3ueF4' target={"_blank"}>
+              <div className='flex flex-row justify-between items-center py-3'>
+                <div className='flex items-center'>
+                  <div className="text-pink-500 font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">03</div>
+                  <h4 className="text-medium sm:text-lg font-bold w-full text-slate-800 dark:text-slate-300">Canvas animation using Javascript</h4>
+                </div>
+                <svg className='fill-pink-500 hover:fill-pink-700 transform hover:scale-[1.2] transition-all' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z"/></svg>
               </div>
             </Link>
           </div>
@@ -122,8 +131,12 @@ export default Home;
 Home.getLayout = (page) => {
   return (
     <BaseLayout>
+      <Head>
+        <title>Kodeweich</title>
+      </Head>
       <TopBar />
       {page}
+      <Footer/>
     </BaseLayout>
   );
 };
