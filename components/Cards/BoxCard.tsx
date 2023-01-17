@@ -1,6 +1,7 @@
 import { Inter } from '@next/font/google';
 import Link from 'next/link';
 
+// TODO: Update this later with IArticle
 export interface IPost{
     title: string
     description: string

@@ -3,7 +3,7 @@ import Seo from '../components/Seo'
 
 export default function Document() {
   return (
-    <Html lang="en" className='dark'>
+    <Html lang="en">
       <Head>
         <Seo/>
       </Head>

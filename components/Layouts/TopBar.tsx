@@ -4,12 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import companyLogo from '../../assets/images/logo.png';
 import compnayLogoDark from '../../assets/images/logodark.png'
-
+import { ITopBar } from '../../interfaces';
 
 const inter = Inter({ subsets: ['latin'] })
-
-export interface ITopBar {}
-
 
 const TopBar: React.FC<ITopBar> = () => {
     const [theme, setTheme] = useState("dark")

@@ -1,9 +1,8 @@
-import { Inter } from '@next/font/google';
 import Link from 'next/link';
+import { Inter } from '@next/font/google';
+import { IFooter } from '../../interfaces';
 
-export interface IFooter {}
 const inter = Inter({ subsets: ['latin'] })
-
 
 const Footer: React.FC<IFooter> = () => {
     return (

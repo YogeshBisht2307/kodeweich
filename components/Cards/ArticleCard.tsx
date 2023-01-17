@@ -1,13 +1,8 @@
 import { Inter } from '@next/font/google';
 import Link from 'next/link';
-import { IArticle } from '../../interfaces';
-
-export interface IArticleCard {
-    article: IArticle
-}
+import { IArticleCard } from '../../interfaces';
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 const ArticleCard: React.FC<IArticleCard> = ({article}) => {
     return (

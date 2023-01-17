@@ -21,31 +21,10 @@ const Home: NextPageWithLayout = () => {
     <section className={'max-w-4xl mx-auto py-8 px-4'}>
       <div className='flex sm:flex-row items-start flex-col-reverse justify-between sm:items-center'>
           <div>
-            <h1
-              className={`
-                ${inter.className}
-                text-4xl
-                text-slate-800
-                sm:text-3xl
-                font-extrabold
-                md:text-4xl
-                xl:text-5xl
-                dark:text-slate-300
-                mb-4`
-              }>
+            <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
               Unlock the Power of Programming
             </h1>
-            <p 
-              className={`
-                ${inter.className}
-                max-w-xl
-                font-med 
-                text-slate-600
-                md:text-md
-                lg:text-md
-                dark:text-slate-500
-                lg:mb-8 mb-6`
-              }>
+            <p className={`${inter.className} max-w-xl font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
               Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!
             </p>
           </div>
@@ -64,30 +43,10 @@ const Home: NextPageWithLayout = () => {
 
       <div className='flex flex-col justify-center'>
           <div className=''>
-            <h3 
-              className={`
-                ${inter.className}
-                font-bold
-                text-2xl
-                md:text-3xl
-                tracking-tight
-                text-black
-                dark:text-slate-300
-                mb-4 mt-4
-              `}>
+            <h3 className={`${inter.className} font-bold text-2xl md:text-3xl tracking-tight text-black dark:text-slate-300 mb-4 mt-4`}>
                 Learn Django and JavaScript
             </h3>
-            <p 
-              className={`
-                ${inter.className}
-                max-w-xl
-                font-sm 
-                text-slate-600
-                md:text-md
-                lg:text-md
-                dark:text-slate-500
-                mb-6 lg:mb-8
-              `}>
+            <p className={`${inter.className} max-w-xl font-sm text-slate-600 md:text-md lg:text-md dark:text-slate-500 mb-6 lg:mb-8`}>
               Learn the fundamentals of Django web framework and JavaScript programming language and build full-featured web applications using both technologies by the end of the course. Let&apos;s get started!
             </p>
           </div>

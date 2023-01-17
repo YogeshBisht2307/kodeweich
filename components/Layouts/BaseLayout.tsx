@@ -1,6 +1,4 @@
-export interface IBaseLayout {
-    children: React.ReactNode
-}
+import {IBaseLayout} from '../../interfaces'
 
 const BaseLayout: React.FC<IBaseLayout> = ({ children }) => {
     return (
