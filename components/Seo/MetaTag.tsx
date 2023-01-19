@@ -5,6 +5,7 @@ const MetaTag = (): JSX.Element => {
             <meta name="application-name" content="Kodeweich"/>
             <meta name="msapplication-TileColor" content="#ffc40d"/>
             <meta name="theme-color" content="#ffffff"/>
+            <meta charSet="utf-8" />
         </>
     );
 }

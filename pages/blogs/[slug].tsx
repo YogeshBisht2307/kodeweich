@@ -8,17 +8,21 @@ import BaseLayout from '../../components/Layouts/BaseLayout'
 import TopBar from '../../components/Layouts/TopBar'
 import Footer from '../../components/Layouts/Footer'
 import ArticleDetail from '../../components/Cards/ArticleDetail'
-import { IArticle, IAuthor } from '../../interfaces'
+import { IArticle, IAuthor, IArticleDefailtPage } from '../../interfaces'
 import ArticleWidget from '../../components/Cards/ArticleWidget'
 import Category from '../../components/Cards/Category'
 import Tags from '../../components/Cards/Tags'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const ArticleDetailPage: NextPageWithLayout<IArticle> = ({article}: InferGetStaticPropsType<typeof getServerSideProps>) => {
+
+const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}) => {
+    if (!article || !categories || !tags){
+        return (<div>Error!</div>)
+    }
     return (
         <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
-            <h1 className={`${inter.className} text-4xl max-w-3xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article.title}</h1>
+            <h1 className={`${inter.className} text-2xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article.title}</h1>
             <p className={`${inter.className} font-med max-w-3xl text-slate-600 md:text-md lg:text-md dark:text-slate-400 lg:mb-8 mb-6`}>
                 {article.description}
             </p>
@@ -28,8 +32,8 @@ const ArticleDetailPage: NextPageWithLayout<IArticle> = ({article}: InferGetStat
                 </div>
                 <div className={`${inter.className}`}>
                     <ArticleWidget/>
-                    <Category/>
-                    <Tags/>
+                    <Category categories={categories}/>
+                    <Tags tags={tags}/>
                 </div>
             </div>
         </section>
@@ -39,33 +43,47 @@ const ArticleDetailPage: NextPageWithLayout<IArticle> = ({article}: InferGetStat
 export default ArticleDetailPage
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-    const response = await prisma.articles.findUnique({
-      where: {
-        slug: String(params?.slug),
-      },
-      include: {
-        author: {
-          select: { name: true },
-        },
-      },
-    });
-    const article: IArticle = {
-        id: response?.id as string,
-        title: response?.title as string,
-        slug: response?.slug as string,
-        description: response?.description as string,
-        featuredImage: response?.featuredImage as string,
-        featuredPost: response?.featuredPost as boolean,
-        content: response?.content as string,
-        published: response?.published as boolean,
-        createdAt: response?.createdAt.getTime() as number,
-        updatedAt: response?.updatedAt.getTime() as number,
-        authorId: response?.authorId as string,
-        author: response?.author as IAuthor
+    try{
+        const articleResponse = prisma.articles.findUnique({
+            where: {slug: String(params?.slug)},
+            include: {author: {select: { name: true }}}
+        });
+        const categoryResponse = prisma.categories.findMany({
+            take: 5, select: {title: true, slug: true}
+        });
+        const tagsResponse = prisma.tags.findMany({
+          take: 5, select: {title: true, slug: true}
+        });
+
+        const articleResult = await articleResponse;
+        const categories = await categoryResponse;
+        const tags = await tagsResponse;
+
+        const article: IArticle = {
+            id: articleResult?.id as string,
+            title: articleResult?.title as string,
+            slug: articleResult?.slug as string,
+            description: articleResult?.description as string,
+            featuredImage: articleResult?.featuredImage as string,
+            featuredPost: articleResult?.featuredPost as boolean,
+            content: articleResult?.content as string,
+            published: articleResult?.published as boolean,
+            createdAt: articleResult?.createdAt.getTime() as number,
+            updatedAt: articleResult?.updatedAt.getTime() as number,
+            authorId: articleResult?.authorId as string,
+            author: articleResult?.author as IAuthor
+        }
+
+        return {
+          props: {article, categories, tags},
+        };
     }
-    return {
-      props: {article: article},
-    };
+    catch(error){
+        console.log(error)
+        return {
+            props: {},
+        };
+    }
 };
 
 ArticleDetailPage.getLayout = (page) => {

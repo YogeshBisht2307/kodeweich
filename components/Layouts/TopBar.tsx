@@ -40,8 +40,7 @@ const TopBar: React.FC<ITopBar> = () => {
                             dark:text-slate-300
                             text-slate-800
                             font-medium
-                            text-xs
-                            sm:text-sm
+                            text-sm
                             dark:hover:bg-slate-800
                             hover:bg-slate-200
                             rounded
@@ -56,7 +55,7 @@ const TopBar: React.FC<ITopBar> = () => {
                             dark:text-slate-300
                             text-slate-800
                             font-medium
-                            text-xs
+                            text-sm
                             sm:text-sm
                             dark:hover:bg-slate-800
                             hover:bg-slate-200
