@@ -28,7 +28,7 @@ const CreateArticle: NextPageWithLayout = () => {
         e.preventDefault();
         try {
           const body = { ...articleInfo, ...{categories: category.replace(/ /g,'').split(',')}, content: content, tags: newTags.replace(/ /g,'').split(',') }
-          await fetch('/api/post', {
+          await fetch('/api/posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),

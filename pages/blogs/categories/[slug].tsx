@@ -16,12 +16,20 @@ const Footer = dynamic(import('../../../components/Layouts/Footer'));
 const ArticleWidget = dynamic(import('../../../components/Cards/ArticleWidget'));
 const Category = dynamic(import('../../../components/Cards/Category'));
 const Tags = dynamic(import('../../../components/Cards/Tags'));
+import { usePageLoading } from '../../../lib/hook';
+const ScreenLoader = dynamic(() => import('../../../components/ScreenLoader'), { ssr: false });
+
 
 const inter = Inter({ subsets: ['latin'] })
 
 const CategoryPage: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }) => {
   const [articlesList, setArticleList] = useState(articles)
   const [searchValue, setSearchValue] = useState('');
+
+  const { isPageLoading } = usePageLoading();
+  if(isPageLoading){
+      return <ScreenLoader/>
+  }
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
     setSearchValue(event.target.value)
@@ -107,23 +115,16 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
           take: 10, select: {title: true, slug: true}
         });
 
-        const articleResult = await articleResponse;
+        const articles = await articleResponse;
         const categories = await categoryResponse;
         const tags = await tagsResponse;
-
-        const articles: Array<IArticleBoxCard> = [];
-        articleResult.forEach((article) => {
-            articles.push({
-                title: article.title,
-                slug: article.slug,
-                description: article.description,
-                createdAt: article.createdAt.getTime(),
-                updatedAt: article.updatedAt.getTime(),
-                author: article.author
-            })
-        });
+        articles.forEach(function(article: IArticleBoxCard) {
+          article.updatedAt = parseInt(article.updatedAt.toString())
+          article.createdAt = parseInt(article.createdAt.toString())
+        })
         return {
           props: {articles, categories, tags},
+          revalidate: 10, 
         };
     }
     catch(error){
@@ -138,10 +139,8 @@ export async function getStaticPaths() {
     const categoryResponse = await prisma.categories.findMany({select: {slug: true}});
 
     return {
-        paths: categoryResponse.map((cat) => ({
-            params: {
-                slug: cat.slug 
-            }
+        paths: categoryResponse.map(({slug}: {slug: string}) => ({
+            params: {slug}
         })),
       fallback: false,
     }

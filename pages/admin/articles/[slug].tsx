@@ -30,7 +30,7 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
         e.preventDefault();
         try {
           const body = { ...articleInfo, ...{categories: category.replace(/ /g,'').split(',')}, content: content, tags: newTags.replace(/ /g,'').split(',') }
-          await fetch('/api/post', {
+          await fetch(`/api/posts/${articleInfo.slug}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -141,27 +141,31 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
                 categories: true
             }
         });
+        const tags = articleResponse?.tags.map(({slug}: {slug: string}) => {
+            return slug
+        });
+        const categories = articleResponse?.categories.map(({slug}: {slug: string}) => {
+            return slug
+        });
 
-        const article: IArticle = {
-            id: articleResponse?.id as string,
-            title: articleResponse?.title as string,
-            slug: articleResponse?.slug as string,
-            description: articleResponse?.description as string,
-            featuredImage: articleResponse?.featuredImage as string,
-            featuredPost: articleResponse?.featuredPost as boolean,
-            content: articleResponse?.content as string,
-            published: articleResponse?.published as boolean,
-            createdAt: articleResponse?.createdAt.getTime() as number,
-            updatedAt: articleResponse?.updatedAt.getTime() as number,
-            authorId: articleResponse?.authorId as string,
-            author: articleResponse?.author as IAuthor
+        if(!articleResponse || !categories || !tags){
+          return {
+            notFound: true,
+          };
         }
-        const tags = articleResponse?.tags.map((tag) => {
-            return tag.slug
-        });
-        const categories = articleResponse?.categories.map((category) => {
-            return category.slug
-        });
+        categories.forEach(function(category: { createdAt: number; }) {
+          category.createdAt = parseInt(category.createdAt.toString())
+        })
+
+        tags.forEach(function(tag: { createdAt: number; }) {
+          tag.createdAt = parseInt(tag.createdAt.toString())
+        })
+
+        const article = {...articleResponse, ...{
+          updatedAt: parseInt(articleResponse.updatedAt.toString()),
+          createdAt: parseInt(articleResponse.createdAt.toString())
+        }}
+ 
         return {
           props: {article, tags, categories},
         };
@@ -169,7 +173,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     catch(error){
         console.log(error)
         return {
-            props: {},
+          notFound: true,
         };
     }
 };

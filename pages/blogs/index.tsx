@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import React, { Key, useState } from 'react';
-import { InferGetStaticPropsType } from 'next'
+import { GetStaticProps } from 'next';
 import { Inter } from '@next/font/google';
-import { GetStaticProps } from 'next'
+import React, { Key, useState } from 'react';
+import { InferGetStaticPropsType } from 'next';
 
 import prisma from '../../lib/prisma';
 import { NextPageWithLayout } from '../page';
@@ -17,35 +17,42 @@ const Footer = dynamic(import('../../components/Layouts/Footer'));
 const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
 const Category = dynamic(import('../../components/Cards/Category'));
 const Tags = dynamic(import('../../components/Cards/Tags'));
+import { usePageLoading } from '../../lib/hook';
+const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
+
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [articlesList, setArticleList] = useState(articles)
+  const [articlesList, setArticleList] = useState(articles);
   const [searchValue, setSearchValue] = useState('');
+  const { isPageLoading } = usePageLoading();
+  if(isPageLoading){
+    return <ScreenLoader/>
+  }
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchValue(event.target.value)
+    setSearchValue(event.target.value);
     if (searchValue !== ""){
       const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
-      })
-      setArticleList(filteredData)
+        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase());
+      });
+      setArticleList(filteredData);
     }else{
-      setArticleList(articles)
+      setArticleList(articles);
     }
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setSearchValue(event.currentTarget.search.value)
+    event.preventDefault();
+    setSearchValue(event.currentTarget.search.value);
     if (searchValue !== ""){
       const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
-      })
-      setArticleList(filteredData)
+        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase());
+      });
+      setArticleList(filteredData);
     }else{
-      setArticleList(articles)
+      setArticleList(articles);
     }
   }
 
@@ -109,27 +116,18 @@ export const getStaticProps: GetStaticProps = async () => {
       take: 10, select: {title: true, slug: true}
     });
     
-    const articleResult = await articleResponse;
+    const articles = await articleResponse;
     const categories = await categoryResponse;
     const tags = await tagsResponse;
-
-    const articles: Array<IArticleBoxCard> = [];
-    articleResult.forEach((article) => {
-      articles.push({
-        title: article.title,
-        slug: article.slug,
-        description: article.description,
-        createdAt: article.createdAt.getTime(),
-        updatedAt: article.updatedAt.getTime(),
-        author: article.author
-      })
+    articles.forEach(function(article: IArticleBoxCard) {
+      article.updatedAt = parseInt(article.updatedAt.toString())
+      article.createdAt = parseInt(article.createdAt.toString())
     })
 
     return {
       props: { articles, categories, tags },
-      revalidate: 10,
+      revalidate: 60,
     };
-
   }catch(error){
     return {
       props: {},

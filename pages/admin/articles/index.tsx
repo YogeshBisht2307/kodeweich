@@ -7,7 +7,7 @@ import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
 import React from 'react';
-import {IAdminArticleList, IAdminArticlePage} from '../../../interfaces'
+import {IArticleBoxCard, IAdminArticlePage} from '../../../interfaces'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -76,7 +76,7 @@ export default Articles;
 
 export const getStaticProps: GetStaticProps = async () => {
   try{
-    const articleResponse = await prisma.articles.findMany({
+    const articles = await prisma.articles.findMany({
       select: {
         id: true,
         title: true,
@@ -87,18 +87,10 @@ export const getStaticProps: GetStaticProps = async () => {
       }
     });
 
-    const articles: Array<IAdminArticleList> = [];
-    articleResponse.forEach((article) => {
-      articles.push({
-        id: article.id,
-        title: article.title,
-        slug: article.slug,
-        updatedAt: article.updatedAt.getTime(),
-        author: article.author,
-        published: article.published
-      })
+    articles.forEach(function(article: IArticleBoxCard) {
+      article.updatedAt = parseInt(article.updatedAt.toString())
+      article.createdAt = parseInt(article.createdAt.toString())
     })
-    console.log(articles)
 
     return {
       props: { articles },
