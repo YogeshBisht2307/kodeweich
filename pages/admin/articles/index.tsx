@@ -7,7 +7,6 @@ import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
 import React from 'react';
-import moment from 'moment'
 import {IAdminArticleList, IAdminArticlePage} from '../../../interfaces'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -78,7 +77,6 @@ export default Articles;
 export const getStaticProps: GetStaticProps = async () => {
   try{
     const articleResponse = await prisma.articles.findMany({
-      where: { published: true },
       select: {
         id: true,
         title: true,

@@ -1,9 +1,19 @@
+import React, { useState, useEffect } from 'react';
 import { Inter } from '@next/font/google';
 import Link from 'next/link';
+import prisma from '../../lib/prisma';
+import { IArticleBoxCard } from '../../interfaces';
 
 const inter = Inter({ subsets: ['latin'] })
 
 const ArticleWidget = () => {
+    const [ relatedPosts, setRelatedPosts ] =  React.useState<IArticleBoxCard[]>([]);
+
+    useEffect(() => {
+        (async () => {
+        })();
+      }, []);
+
     return (
         <div className={`p-6 mb-8 rounded-lg border-2 border-y-slate-300 border-x-pink-500 dark:border-y-slate-500`}>
             <h3 className={`text-medium sm:text-2xl font-bold w-full text-slate-800 dark:text-slate-300 pb-4`}>Popular Posts</h3>

@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 const ArticleDetail: React.FC<IArticleDetail> = ({article}) => {
     return (
-        <div className={`${inter.className} mb-8 px-0 rounded-lg`}>
+        <div className={`${inter.className} article-detail mb-8 px-0 rounded-lg`}>
             <Image priority={true} src={article.featuredImage} width={800} height={200} alt={article.title}/>
             <div className={`py-6`}>
                 <div

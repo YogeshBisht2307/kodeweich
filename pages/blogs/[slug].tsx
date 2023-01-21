@@ -1,20 +1,19 @@
+import dynamic from 'next/dynamic';
 import { Inter } from '@next/font/google'
 import Head from 'next/head'
-import { InferGetStaticPropsType } from 'next'
 import { GetServerSideProps } from 'next'
 import { NextPageWithLayout } from '../page'
 import prisma from '../../lib/prisma'
 import BaseLayout from '../../components/Layouts/BaseLayout'
 import TopBar from '../../components/Layouts/TopBar'
-import Footer from '../../components/Layouts/Footer'
 import ArticleDetail from '../../components/Cards/ArticleDetail'
 import { IArticle, IAuthor, IArticleDefailtPage } from '../../interfaces'
-import ArticleWidget from '../../components/Cards/ArticleWidget'
-import Category from '../../components/Cards/Category'
-import Tags from '../../components/Cards/Tags'
+const Footer = dynamic(import('../../components/Layouts/Footer'));
+const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
+const Category = dynamic(import('../../components/Cards/Category'));
+const Tags = dynamic(import('../../components/Cards/Tags'));
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}) => {
     if (!article || !categories || !tags){
@@ -42,7 +41,12 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
 
 export default ArticleDetailPage
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({req, res, params }) => {
+    res.setHeader(
+        'Cache-Control',
+        'public, max-age=300, s-maxage=300, stale-while-revalidate=59'
+    )
+
     try{
         const articleResponse = prisma.articles.findUnique({
             where: {slug: String(params?.slug)},
@@ -52,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             take: 5, select: {title: true, slug: true}
         });
         const tagsResponse = prisma.tags.findMany({
-          take: 5, select: {title: true, slug: true}
+          take: 10, select: {title: true, slug: true}
         });
 
         const articleResult = await articleResponse;

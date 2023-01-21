@@ -19,18 +19,19 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
       slug: article.slug,
       description: article.description,
       featuredImage: article.featuredImage,
+      published: article.published === true ? true : false
     }
     const [articleInfo, setArticleInfo] = useState(initialState);
     const [content, setContent] = useState(article.content);
-    const [category, setCategory] = useState('');
-    const [newTags, setTags] = useState('');
+    const [category, setCategory] = useState(categories.toString());
+    const [newTags, setTags] = useState(tags.toString());
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-          const body = { ...articleInfo, content }
+          const body = { ...articleInfo, ...{categories: category.replace(/ /g,'').split(',')}, content: content, tags: newTags.replace(/ /g,'').split(',') }
           await fetch('/api/post', {
-            method: 'POST',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
           });
@@ -38,7 +39,7 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
         } catch (error) {
           console.error(error);
         }
-      };
+    };
     return (
         <>
         <div className='max-w-4xl px-4 mx-auto'>
@@ -94,8 +95,15 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
             />
             <div className="flex py-4">
                 <div className="flex items-center h-5">
-                    <input id="helper-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" className="w-4 h-4 border-gray-300 rounded-md outline-none dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
-                </div>
+                    <input
+                      id="helper-checkbox"
+                      aria-describedby="helper-checkbox-text"
+                      type="checkbox"
+                      checked={articleInfo.published}
+                      onChange={() => setArticleInfo({...articleInfo, published: !articleInfo.published})}
+                      className="w-4 h-4 border-gray-300 rounded-md outline-none dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </div>
                 <div className="ml-2 text-sm">
                     <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-slate-400">Mark Article for Publish...</label>
                     <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-slate-400">Make sure you have written a understandable article.</p>
@@ -112,7 +120,7 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
               className={`${inter.className} mr-4 py-2 cursor-pointer rounded-md bg-slate-800 dark:bg-slate-300 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
               disabled={!content || !articleInfo.title} type="submit" value="Update"
             />
-            <a className="back" href="#" onClick={() => Router.push('/')}>
+            <a className="back" href="#" onClick={() => Router.push('/admin/articles')}>
               Cancel
             </a>
           </form>
@@ -149,14 +157,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
             author: articleResponse?.author as IAuthor
         }
         const tags = articleResponse?.tags.map((tag) => {
-            return {title: tag.title, slug: tag.slug }
+            return tag.slug
         });
-        console.log(tags)
         const categories = articleResponse?.categories.map((category) => {
-            return {title: category.title, slug: category.slug }
+            return category.slug
         });
-        console.log(categories)
-
         return {
           props: {article, tags, categories},
         };

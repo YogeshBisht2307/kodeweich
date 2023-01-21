@@ -1,8 +1,37 @@
 @tailwind base;
+
+:root {
+  --primary: rgb(222, 200, 244);
+  --secondary: rgb(18, 33, 62);
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--primary);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--primary);
+  border-radius: 5px;
+  margin: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 10px;
+  border: 3px solid var(--primary);
+}
+
 @tailwind components;
 @tailwind utilities;
-
-@import '//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css';
 
 * {
   box-sizing: border-box;
@@ -29,4 +58,25 @@ a {
 }
 .ql-editor{
   min-height: 20rem;
+}
+
+.article-detail pre {
+  color: #f8f8f2;
+  overflow: auto;
+  padding: 1rem;
+  max-height: 90vh;
+  margin: 0.5rem 0rem;
+  background-color: rgb(18, 30, 44) !important;
+  border-radius: 0.5rem;
+}
+
+.article-detail ul{
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+@media (max-width: 768px){
+  .article-detail pre{
+    max-height: 70vh;
+  }
 }

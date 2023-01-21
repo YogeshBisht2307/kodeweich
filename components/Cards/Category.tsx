@@ -9,7 +9,7 @@ const Category: React.FC<ICategories> = ({categories}) => {
         </h3>
         <div className={`flex flex-col`}>
           {categories.map((category, index) => (
-              <Link href={`/blog/categories/${category.slug}`} key={index} className={`max-w-xl py-2 font-sm text-slate-600  dark:hover:text-slate-400 transition dark:text-slate-500`}>{category.title}</Link>
+              <Link href={`/blogs/categories/${category.slug}`} key={index} className={`max-w-xl py-2 font-sm text-slate-600  dark:hover:text-slate-400 transition dark:text-slate-500`}>{category.title}</Link>
           ))}
         </div>
     </div>

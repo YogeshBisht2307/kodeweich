@@ -89,3 +89,9 @@ export interface IUpdateArticlePage{
     categories: ICategory[];
     tags: ITag[];
 }
+
+export interface ISearchInput{
+    value: string;
+    onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+}
