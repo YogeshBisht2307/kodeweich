@@ -6,18 +6,21 @@ import Head from 'next/head';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
-import React from 'react';
-import {IArticleBoxCard, IAdminArticlePage} from '../../../interfaces'
+import React, { useState } from 'react';
+import {IAdminArticlePage} from '../../../interfaces'
+import DeleteModal from '../../../components/Cards/DeleteModal';
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
-    if(!articles){
-      return (<div>Loading</div>);
+    const [selected, setSelected] = useState("")
+    const handleClick = (event: React.MouseEvent, slug: string) => {
+      setSelected(slug)
     }
     return (
-        <>
+      <>
         <div className='max-w-4xl px-4 mx-auto'>
+          {selected !== "" && <DeleteModal selected={selected} setSelected={setSelected}/>}
           <h1 className={`${inter.className} my-8 text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>
             Articles
           </h1>
@@ -47,7 +50,7 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
                       </tr>
                   </thead>
                   <tbody>
-                      {articles.map((article, index) => (
+                      {articles && articles.length > 0 ? articles.map((article, index) => (
                         <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                           <td className="px-4 py-4 whitespace-nowrap">
                               <Link href={`/admin/articles/${article.slug}`}>{article.title}</Link>
@@ -60,15 +63,22 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
                           </td>
                           <td className="flex items-center px-6 py-4 space-x-3">
                               <Link href={`/admin/articles/${article.slug}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                              <p className="font-medium text-red-600 cursor-pointer dark:text-red-500">Remove</p>
+                              <p onClick={(e)=> handleClick(e, article.slug)} className="font-medium text-red-600 cursor-pointer dark:text-red-500">Remove</p>
                           </td>
                         </tr>
-                      ))}
+                      )):
+                      <tr className="w-full bg-gray-200 border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td></td>
+                        <td></td>
+                        <td className='py-4'>No Article Found.</td>
+                        <td></td>
+                      </tr>
+                    }
                   </tbody>
               </table>
           </div>
         </div>
-    </>
+      </>
     );
 };
 
@@ -87,21 +97,19 @@ export const getStaticProps: GetStaticProps = async () => {
       }
     });
 
-    articles.forEach(function(article: IArticleBoxCard) {
+    articles.forEach(function(article: any) {
       article.updatedAt = parseInt(article.updatedAt.toString())
-      article.createdAt = parseInt(article.createdAt.toString())
     })
 
     return {
       props: { articles },
-      revalidate: 10,
+      revalidate: 60,
     };
-
-
   }catch(error){
+    console.log(error)
     return {
       props: {},
-      revalidate: 10,
+      revalidate: 60,
     };
   }
 };

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prisma';
-import {IArticleBoxCard} from '../../../interfaces'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if(req.method === 'POST'){
@@ -20,6 +19,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         featuredImage: featuredImage,
         description: description,
         slug: slug,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
         published: published,
         author: { connect: { email: "yogeshbisht.2307@gmail.com" } },
         categories: {connect: connectCategory},
@@ -27,7 +28,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     });
     res.json(result);
   }
-
   else if(req.method === 'GET'){
     const {slug} = req.query;
     var condition: any = { published: true }
@@ -49,7 +49,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         author: {select: { name: true }},
       }
     });
-    result.forEach(function(article: IArticleBoxCard) {
+    result.forEach(function(article: any) {
       article.updatedAt = parseInt(article.updatedAt.toString())
       article.createdAt = parseInt(article.createdAt.toString())
     })

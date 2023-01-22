@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface IFooter {}
 export interface ITopBar {}
 
@@ -80,6 +82,13 @@ export interface IBlogPage{
     tags: ITag[];
 }
 
+export interface IArticleSlugPage{
+    articles: IArticleBoxCard[];
+    categories: ICategory[];
+    tags: ITag[];
+    slug: string;
+}
+
 export interface IAdminArticlePage{
     articles: IAdminArticleList[];
 }
@@ -94,4 +103,9 @@ export interface ISearchInput{
     value: string;
     onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+}
+
+export interface IDeleteArticle{
+    selected: string;
+    setSelected: Dispatch<SetStateAction<string>>;
 }

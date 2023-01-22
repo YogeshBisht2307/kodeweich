@@ -9,7 +9,7 @@ import TopBar from '../components/Layouts/TopBar';
 import HeroImage from '../assets/images/hero.png'
 import Footer from '../components/Layouts/Footer';
 import BoxCard from '../components/Cards/BoxCard';
-import { usePageLoading } from '../lib/hook';
+import { usePageLoading } from '../lib/hooks';
 const ScreenLoader = dynamic(() => import('../components/ScreenLoader'), { ssr: false });
 
 const inter = Inter({ subsets: ['latin'] })

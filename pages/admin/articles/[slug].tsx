@@ -8,10 +8,61 @@ import Footer from '../../../components/Layouts/Footer';
 import React, { useState } from 'react';
 import Router from 'next/router';
 import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
-import { IArticle, IAuthor, IUpdateArticlePage} from '../../../interfaces';
+import {IUpdateArticlePage} from '../../../interfaces';
 import 'react-quill/dist/quill.snow.css';
+import { authUser } from '../../../lib/authUser';
 
 const inter = Inter({ subsets: ['latin'] })
+
+export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
+  const user = await authUser(req, res);
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/admin/signin",
+      },
+      props: {},
+    };
+  }
+  try{
+      const articleResponse = await prisma.articles.findUnique({
+          where: {slug: String(params?.slug)},
+          include: {
+              author: {select: { name: true }},
+              tags: true,
+              categories: true
+          }
+      });
+      if(!articleResponse){
+        return {
+          notFound: true,
+        };
+      }
+
+      const {tags, categories, ...other} = articleResponse;
+      const tagsSlugArry = articleResponse?.tags.map(
+        ({slug}: {slug: string}) => {return slug}
+      );
+      const categoriesSlugArray = articleResponse?.categories.map(
+        ({slug}: {slug: string}) => {return slug}
+      );
+      const article = {...other, ...{
+        updatedAt: parseInt(other.updatedAt.toString()),
+        createdAt: parseInt(other.createdAt.toString())
+      }}
+      
+      return {
+        props: {article, tags: tagsSlugArry, categories: categoriesSlugArray},
+      };
+  }
+  catch(error){
+      console.log(error)
+      return {
+        notFound: true,
+      };
+  }
+};
 
 const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categories, tags}) => {
     const initialState = {
@@ -131,52 +182,6 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
 
 export default UpdateArticle;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-    try{
-        const articleResponse = await prisma.articles.findUnique({
-            where: {slug: String(params?.slug)},
-            include: {
-                author: {select: { name: true }},
-                tags: true,
-                categories: true
-            }
-        });
-        const tags = articleResponse?.tags.map(({slug}: {slug: string}) => {
-            return slug
-        });
-        const categories = articleResponse?.categories.map(({slug}: {slug: string}) => {
-            return slug
-        });
-
-        if(!articleResponse || !categories || !tags){
-          return {
-            notFound: true,
-          };
-        }
-        categories.forEach(function(category: { createdAt: number; }) {
-          category.createdAt = parseInt(category.createdAt.toString())
-        })
-
-        tags.forEach(function(tag: { createdAt: number; }) {
-          tag.createdAt = parseInt(tag.createdAt.toString())
-        })
-
-        const article = {...articleResponse, ...{
-          updatedAt: parseInt(articleResponse.updatedAt.toString()),
-          createdAt: parseInt(articleResponse.createdAt.toString())
-        }}
- 
-        return {
-          props: {article, tags, categories},
-        };
-    }
-    catch(error){
-        console.log(error)
-        return {
-          notFound: true,
-        };
-    }
-};
 UpdateArticle.getLayout = (page) => {
   return (
     <BaseLayout>

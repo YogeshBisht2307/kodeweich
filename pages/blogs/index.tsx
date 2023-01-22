@@ -17,7 +17,7 @@ const Footer = dynamic(import('../../components/Layouts/Footer'));
 const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
 const Category = dynamic(import('../../components/Cards/Category'));
 const Tags = dynamic(import('../../components/Cards/Tags'));
-import { usePageLoading } from '../../lib/hook';
+import { usePageLoading } from '../../lib/hooks';
 const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
 
 
@@ -62,7 +62,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
           Blog
         </h1>
         <p className={`${inter.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
-          I&apos;ve been writing online since 2014, mostly about web development and tech careers. In total, I&apos;ve written 52 articles on my blog. Use the search below to filter by title.
+          I have been coding for several years and have experience working with a variety of programming languages and frameworks. My goal with this blog is to share my knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>
@@ -119,7 +119,12 @@ export const getStaticProps: GetStaticProps = async () => {
     const articles = await articleResponse;
     const categories = await categoryResponse;
     const tags = await tagsResponse;
-    articles.forEach(function(article: IArticleBoxCard) {
+    if(!articles || !categories || !tags){
+      return{
+        notFound: true
+      }
+    }
+    articles.forEach(function(article: any) {
       article.updatedAt = parseInt(article.updatedAt.toString())
       article.createdAt = parseInt(article.createdAt.toString())
     })

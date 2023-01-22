@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { Key, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import {GetStaticProps} from 'next'
 import { Inter } from '@next/font/google';
 
 import prisma from '../../../lib/prisma';
 import { NextPageWithLayout } from '../../page';
-import { IArticleBoxCard, IBlogPage } from '../../../interfaces';
+import { IArticleBoxCard, IArticleSlugPage } from '../../../interfaces';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import ArticleCard from '../../../components/Cards/ArticleCard';
@@ -16,21 +16,23 @@ const Footer = dynamic(import('../../../components/Layouts/Footer'));
 const ArticleWidget = dynamic(import('../../../components/Cards/ArticleWidget'));
 const Category = dynamic(import('../../../components/Cards/Category'));
 const Tags = dynamic(import('../../../components/Cards/Tags'));
-import { usePageLoading } from '../../../lib/hook';
+import { usePageLoading } from '../../../lib/hooks';
 const ScreenLoader = dynamic(() => import('../../../components/ScreenLoader'), { ssr: false });
 
 
 const inter = Inter({ subsets: ['latin'] })
 
-const CategoryPage: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }) => {
+const CategoryPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, categories, tags }) => {
   const [articlesList, setArticleList] = useState(articles)
   const [searchValue, setSearchValue] = useState('');
-
   const { isPageLoading } = usePageLoading();
+  useEffect(() => {
+    setArticleList(articles)
+  }, [slug])
+
   if(isPageLoading){
       return <ScreenLoader/>
   }
-
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
     setSearchValue(event.target.value)
     if (searchValue !== ""){
@@ -96,6 +98,7 @@ CategoryPage.getLayout = (page) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
+    console.log(params?.slug)
     try{
         const articleResponse = prisma.articles.findMany({
             where: {categories: {some: {slug: String(params?.slug)}}},
@@ -116,14 +119,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         });
 
         const articles = await articleResponse;
+        console.log(articles)
         const categories = await categoryResponse;
         const tags = await tagsResponse;
-        articles.forEach(function(article: IArticleBoxCard) {
+        articles.forEach(function(article: any) {
           article.updatedAt = parseInt(article.updatedAt.toString())
           article.createdAt = parseInt(article.createdAt.toString())
         })
         return {
-          props: {articles, categories, tags},
+          props: {slug: params?.slug, articles, categories, tags},
           revalidate: 10, 
         };
     }
@@ -136,12 +140,18 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   }
   
 export async function getStaticPaths() {
-    const categoryResponse = await prisma.categories.findMany({select: {slug: true}});
-
-    return {
-        paths: categoryResponse.map(({slug}: {slug: string}) => ({
-            params: {slug}
-        })),
-      fallback: false,
+    try{
+      const categoryResponse = await prisma.categories.findMany({select: {slug: true}});
+      return {
+          paths: categoryResponse.map(({slug}: {slug: string}) => ({
+              params: {slug}
+          })),
+        fallback: true,
+      }
+    }catch(error){
+      return{
+        paths: [],
+        fallback: true
+      }
     }
 }

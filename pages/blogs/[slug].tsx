@@ -8,7 +8,7 @@ import BaseLayout from '../../components/Layouts/BaseLayout';
 import TopBar from '../../components/Layouts/TopBar';
 import ArticleDetail from '../../components/Cards/ArticleDetail';
 import {IArticleDefailtPage } from '../../interfaces';
-import { usePageLoading } from '../../lib/hook';
+import { usePageLoading } from '../../lib/hooks';
 const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
 
 const Footer = dynamic(import('../../components/Layouts/Footer'));
@@ -40,6 +40,11 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, params }
         const articleResult = await articleResponse;
         const categories = await categoryResponse;
         const tags = await tagsResponse;
+        if(!articleResult){
+            return {
+                notFound: true
+            }
+        }
         const article = {...articleResult, ...{
             updatedAt: parseInt(articleResult.updatedAt.toString()),
             createdAt: parseInt(articleResult.createdAt.toString())
@@ -47,7 +52,6 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, params }
 
         return {
           props: {article, categories, tags},
-          revalidate: 10,
         };
     }
     catch(error){

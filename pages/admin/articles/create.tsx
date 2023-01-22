@@ -1,11 +1,11 @@
 import { Inter } from '@next/font/google';
 import { NextPageWithLayout } from '../../page';
 import Head from 'next/head';
+import Router from 'next/router';
+import React, { useState } from 'react';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
-import React, { useState } from 'react';
-import Router from 'next/router';
 import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
 import 'react-quill/dist/quill.snow.css';
 
