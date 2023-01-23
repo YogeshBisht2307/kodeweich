@@ -25,7 +25,7 @@ export async function authUser(req: any, res: any) {
             bio: user?.bio,
             image: user?.image
         };
-      } catch (error) {
+    } catch (error) {
         return null
-      }
-  }
+    }
+}

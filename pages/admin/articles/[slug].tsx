@@ -6,11 +6,13 @@ import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
 import React, { useState } from 'react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
 import {IUpdateArticlePage} from '../../../interfaces';
 import 'react-quill/dist/quill.snow.css';
 import { authUser } from '../../../lib/authUser';
+import { usePageLoading } from '../../../lib/hooks';
+import ScreenLoader from '../../../components/ScreenLoader';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     return {
       redirect: {
         permanent: false,
-        destination: "/admin/signin",
+        destination: "/admin/login",
       },
       props: {},
     };
@@ -72,6 +74,9 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
       featuredImage: article.featuredImage,
       published: article.published === true ? true : false
     }
+
+    const router = useRouter();
+
     const [articleInfo, setArticleInfo] = useState(initialState);
     const [content, setContent] = useState(article.content);
     const [category, setCategory] = useState(categories.toString());
@@ -80,17 +85,30 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-          const body = { ...articleInfo, ...{categories: category.replace(/ /g,'').split(',')}, content: content, tags: newTags.replace(/ /g,'').split(',') }
-          await fetch(`/api/posts/${articleInfo.slug}`, {
+          const body = {
+            ...articleInfo,
+            ...{categories: category.replace(/ /g,'').split(',')},
+            content: content,
+            tags: newTags.replace(/ /g,'').split(',')
+          };
+          
+          const response = await fetch(`/api/posts/${articleInfo.slug}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
           });
-          await Router.push('/admin/articles');
+
+          if(response.status !== 200) throw Error("Unable to update article.");
+          router.push('/admin/articles');
+
         } catch (error) {
           console.error(error);
         }
     };
+
+    const { isPageLoading } = usePageLoading();
+    if(isPageLoading) return <ScreenLoader/>
+
     return (
         <>
         <div className='max-w-4xl px-4 mx-auto'>

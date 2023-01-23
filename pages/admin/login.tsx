@@ -1,10 +1,24 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useRouter } from "next/router";
+import { useAuth, usePageLoading } from '../../lib/hooks';
+import ScreenLoader from '../../components/ScreenLoader';
 
 const Login = () => {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        async function checkAuth() {
+          const user = await useAuth();
+          if (user) return router.push('/admin/articles');
+        }
+        checkAuth();
+    }, [])
+
+    const { isPageLoading } = usePageLoading();
+    if(isPageLoading) return <ScreenLoader/>
+
     const signinHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         try {

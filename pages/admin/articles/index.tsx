@@ -6,17 +6,31 @@ import Head from 'next/head';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {IAdminArticlePage} from '../../../interfaces'
 import DeleteModal from '../../../components/Cards/DeleteModal';
+import { useAuth, usePageLoading } from '../../../lib/hooks';
+import { useRouter } from 'next/router'
+import ScreenLoader from '../../../components/ScreenLoader';
+
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
-    const [selected, setSelected] = useState("")
-    const handleClick = (event: React.MouseEvent, slug: string) => {
-      setSelected(slug)
-    }
+    const router = useRouter();
+    const [selected, setSelected] = useState("");
+
+    useEffect(() => {
+      async function checkAuth() {
+        const user = await useAuth();
+        if (!user) return router.push('/admin/login');
+      }
+      checkAuth();
+    }, [])
+
+    const { isPageLoading } = usePageLoading();
+    if(isPageLoading) return <ScreenLoader/>
+
     return (
       <>
         <div className='max-w-4xl px-4 mx-auto'>
@@ -63,7 +77,7 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
                           </td>
                           <td className="flex items-center px-6 py-4 space-x-3">
                               <Link href={`/admin/articles/${article.slug}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                              <p onClick={(e)=> handleClick(e, article.slug)} className="font-medium text-red-600 cursor-pointer dark:text-red-500">Remove</p>
+                              <p onClick={(e)=> setSelected(article.slug)} className="font-medium text-red-600 cursor-pointer dark:text-red-500">Remove</p>
                           </td>
                         </tr>
                       )):

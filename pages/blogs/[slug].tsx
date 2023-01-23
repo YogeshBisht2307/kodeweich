@@ -9,6 +9,7 @@ import TopBar from '../../components/Layouts/TopBar';
 import ArticleDetail from '../../components/Cards/ArticleDetail';
 import {IArticleDefailtPage } from '../../interfaces';
 import { usePageLoading } from '../../lib/hooks';
+import { authUser } from '../../lib/authUser';
 const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
 
 const Footer = dynamic(import('../../components/Layouts/Footer'));

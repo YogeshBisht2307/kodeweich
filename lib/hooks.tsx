@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import useSWR from 'swr';
 
 import { useEffect, useState } from 'react';
 
@@ -25,3 +26,18 @@ export const usePageLoading = () => {
 
   return { isPageLoading };
 };
+
+export const useAuth = async() => {
+  try{
+    const response = await fetch('/api/user');
+    const user = await response.json();
+    if(response.status != 200){
+      throw Error("Authorization Failure")
+    }
+
+    return user;
+  } catch (error){
+    console.log(error)
+    return null;
+  }
+}

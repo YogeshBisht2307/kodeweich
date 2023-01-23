@@ -1,13 +1,15 @@
 import { Inter } from '@next/font/google';
 import { NextPageWithLayout } from '../../page';
 import Head from 'next/head';
-import Router from 'next/router';
-import React, { useState } from 'react';
+import Router, { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
 import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
 import 'react-quill/dist/quill.snow.css';
+import { useAuth, usePageLoading } from '../../../lib/hooks';
+import ScreenLoader from '../../../components/ScreenLoader';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,25 +21,47 @@ const CreateArticle: NextPageWithLayout = () => {
       featuredImage: "",
       published: false
     }
+    const router = useRouter();
+
     const [articleInfo, setArticleInfo] = useState(initialState);
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [newTags, setTags] = useState("");
-  
+
     const submitData = async (e: React.SyntheticEvent) => {
-        e.preventDefault();
-        try {
-          const body = { ...articleInfo, ...{categories: category.replace(/ /g,'').split(',')}, content: content, tags: newTags.replace(/ /g,'').split(',') }
-          await fetch('/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-          });
-          await Router.push('/admin/articles');
-        } catch (error) {
-          console.error(error);
+      e.preventDefault();
+      try {
+        const body = { 
+          ...articleInfo,
+          ...{categories: category.replace(/ /g,'').split(',')},
+          content: content,
+          tags: newTags.replace(/ /g,'').split(',')
         }
+
+        const response = await fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if(response.status !== 200) throw Error('Unable to create article');
+        router.push('/admin/articles');
+      } catch (error) {
+        console.error(error);
+      }
     };
+
+    useEffect(() => {
+      async function checkAuth() {
+        const user = await useAuth();
+        if (!user) return router.push('/admin/login');
+      }
+      checkAuth();
+    }, [])
+
+    const { isPageLoading } = usePageLoading();
+    if(isPageLoading) return <ScreenLoader/>
+
     return (
         <>
         <div className='max-w-4xl px-4 mx-auto'>
