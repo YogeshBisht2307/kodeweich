@@ -8,13 +8,12 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const {user} = useAuth();
     useEffect(() => {
-        async function checkAuth() {
-          const user = await useAuth();
-          if (user) return router.push('/admin/articles');
-        }
-        checkAuth();
-    }, [])
+      if(user){
+        router.push("/admin/articles");
+      }
+    }, [user.email])
 
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>

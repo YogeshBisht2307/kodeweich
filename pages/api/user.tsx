@@ -10,8 +10,7 @@ export interface UserJwtPayload extends jwt.JwtPayload {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    const token = getCookie("kodeweich-auth-token", { req, res });
-    console.log("token:- ", token);
+    const token = getCookie(process.env.COOKIE_NAME as string, { req, res });
     if(!token){
         return res.status(403).json({"message": "Authorization Error"})
     }

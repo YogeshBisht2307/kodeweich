@@ -25,17 +25,27 @@ export const usePageLoading = () => {
   return { isPageLoading };
 };
 
-export const useAuth = async() => {
-  try{
-    const response = await fetch('/api/user');
-    const user = await response.json();
-    if(response.status != 200){
-      throw Error("Authorization Failure")
-    }
+export const useAuth = () => {
+  const [user, setUser] = useState({
+    email: "",
+    name: "",
+    bio: "",
+    image: "",
+  });
 
-    return user;
-  } catch (error){
-    console.log(error)
-    return null;
-  }
+  useEffect(() => {
+   (async () => {
+    try{
+      const response = await fetch('/api/user');
+      if(response.status != 200){
+        throw Error("Authorization Failure")
+      }
+      setUser(await response.json());
+    } catch(error){
+      console.log(error);
+    }
+   });
+  }, [user.email])
+
+  return {user};
 }

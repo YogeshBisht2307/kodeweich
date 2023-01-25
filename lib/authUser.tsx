@@ -9,7 +9,7 @@ export interface UserJwtPayload extends jwt.JwtPayload {
 }
 
 export async function authUser(req: any, res: any) {
-    const token = getCookie("kodeweich-auth-token", { req, res });
+    const token = getCookie(process.env.COOKIE_NAME as string, { req, res });
     if(!token){
         return null
     }

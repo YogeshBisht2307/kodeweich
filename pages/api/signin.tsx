@@ -23,10 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as Secret, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: `${process.env.JWT_EXPIRES_IN}d`,
     });
-
-    setCookie("kodeweich-auth-token", token, {
+    setCookie(process.env.COOKIE_NAME as string, token, {
         req,
         res,
         maxAge: 60 * 60 * 24* parseInt(process.env.JWT_EXPIRES_IN || "1"),

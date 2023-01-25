@@ -51,16 +51,15 @@ const CreateArticle: NextPageWithLayout = () => {
       }
     };
 
-    useEffect(() => {
-      async function checkAuth() {
-        const user = await useAuth();
-        if (!user) return router.push('/admin/login');
-      }
-      checkAuth();
-    }, [])
-
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>
+
+    const {user} = useAuth();
+    useEffect(() => {
+      if(!user){
+        router.push('/admin/login');
+      }
+    }, [user.email])
 
     return (
         <>
