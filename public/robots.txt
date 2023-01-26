@@ -1,0 +1,13 @@
+# Block all crawlers for /admin
+User-agent: *
+Disallow: /admin
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+User-agent: *
+Allow: /blogs
+
+Host: https://kodeweich.com
+

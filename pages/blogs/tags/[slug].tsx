@@ -45,6 +45,12 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         const articles = await articleResponse;
         const categories = await categoryResponse;
         const tags = await tagsResponse;
+        if(!articles){
+          return {
+            notFound: true
+          }
+        }
+
         articles.forEach(function(article: any) {
           article.updatedAt = parseInt(article.updatedAt.toString())
           article.createdAt = parseInt(article.createdAt.toString())
@@ -54,7 +60,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         };
     }
     catch(error){
-        console.log(error)
         return {
             notFound: true,
         };
@@ -71,10 +76,9 @@ export async function getStaticPaths() {
         fallback: true,
       }
     }catch(error){
-      console.log(error)
       return {
         paths: [],
-        fallback: true
+        fallback: false
       }
   }
 }
@@ -84,8 +88,8 @@ const SlugPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, catego
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
-    setArticleList(articles)
-  }, [slug])
+    setArticleList(articles);
+  }, [slug, articles])
 
   const { isPageLoading } = usePageLoading();
   if(isPageLoading){
@@ -126,7 +130,7 @@ const SlugPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, catego
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>
-            {articlesList.map((article: IArticleBoxCard, index: Key) => (
+            {articlesList && articlesList.map((article: IArticleBoxCard, index: Key) => (
               <ArticleCard article={article} key={index}/>
             ))}
           </div>

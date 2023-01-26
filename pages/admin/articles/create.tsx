@@ -1,7 +1,7 @@
 import { Inter } from '@next/font/google';
 import { NextPageWithLayout } from '../../page';
 import Head from 'next/head';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
 import TopBar from '../../../components/Layouts/TopBar';
@@ -10,6 +10,7 @@ import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
 import 'react-quill/dist/quill.snow.css';
 import { useAuth, usePageLoading } from '../../../lib/hooks';
 import ScreenLoader from '../../../components/ScreenLoader';
+import toast from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,12 +22,17 @@ const CreateArticle: NextPageWithLayout = () => {
       featuredImage: "",
       published: false
     }
-    const router = useRouter();
-
     const [articleInfo, setArticleInfo] = useState(initialState);
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
     const [newTags, setTags] = useState("");
+
+    const {user} = useAuth();
+    useEffect(() => {
+      if(!user){
+        Router.push('/admin/login');
+      }
+    }, [user]);
 
     const submitData = async (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -35,6 +41,7 @@ const CreateArticle: NextPageWithLayout = () => {
           ...articleInfo,
           ...{categories: category.replace(/ /g,'').split(',')},
           content: content,
+          userEmail: user.email,
           tags: newTags.replace(/ /g,'').split(',')
         }
 
@@ -45,21 +52,14 @@ const CreateArticle: NextPageWithLayout = () => {
         });
 
         if(response.status !== 200) throw Error('Unable to create article');
-        router.push('/admin/articles');
+        Router.push('/admin/articles');
       } catch (error) {
-        console.error(error);
+        toast.error("Unable to create article", {duration: 5000});
       }
     };
 
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>
-
-    const {user} = useAuth();
-    useEffect(() => {
-      if(!user){
-        router.push('/admin/login');
-      }
-    }, [user.email])
 
     return (
         <>

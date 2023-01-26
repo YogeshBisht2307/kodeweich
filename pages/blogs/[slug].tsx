@@ -8,8 +8,10 @@ import BaseLayout from '../../components/Layouts/BaseLayout';
 import TopBar from '../../components/Layouts/TopBar';
 import ArticleDetail from '../../components/Cards/ArticleDetail';
 import {IArticleDefailtPage } from '../../interfaces';
-import { usePageLoading } from '../../lib/hooks';
-import { authUser } from '../../lib/authUser';
+import useOpenGraph, { usePageLoading } from '../../lib/hooks';
+import { absUrl } from '../../lib/helper';
+import OpenGraph from '../../components/Seo/OpenGraph';
+import { useEffect } from 'react';
 const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
 
 const Footer = dynamic(import('../../components/Layouts/Footer'));
@@ -63,6 +65,20 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, params }
 };
 
 const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}) => {
+    const ogProperties = useOpenGraph({
+        url: absUrl(`/blogs/${article.slug}`),
+        title: article.title,
+        image: {
+          type: "image/jpeg",
+          url: article.featuredImage,
+          alt: article.title,
+        },
+        description: article.description,
+        type: "article",
+        author: article.author.name,
+        section: "coding & programming"
+      });
+
     const { isPageLoading } = usePageLoading();
     if(isPageLoading){
         return <ScreenLoader/>
@@ -70,7 +86,10 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
 
     return (
         <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
-            <h1 className={`${inter.className} text-2xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article.title}</h1>
+            <Head>
+                <OpenGraph properties={ogProperties} />
+            </Head>
+            <h1 className={`${inter.className} text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article.title}</h1>
             <p className={`${inter.className} font-med max-w-3xl text-slate-600 md:text-md lg:text-md dark:text-slate-400 lg:mb-8 mb-6`}>
                 {article.description}
             </p>

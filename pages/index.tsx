@@ -9,24 +9,43 @@ import TopBar from '../components/Layouts/TopBar';
 import HeroImage from '../assets/images/hero.png'
 import Footer from '../components/Layouts/Footer';
 import BoxCard from '../components/Cards/BoxCard';
-import { usePageLoading } from '../lib/hooks';
+import useOpenGraph, { usePageLoading } from '../lib/hooks';
+import { absUrl } from '../lib/helper';
+import OpenGraph from '../components/Seo/OpenGraph';
 const ScreenLoader = dynamic(() => import('../components/ScreenLoader'), { ssr: false });
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Home: NextPageWithLayout = () => {
   const { isPageLoading } = usePageLoading();
-    if(isPageLoading){
-        return <ScreenLoader/>
-    }
 
   const featurePost = [
     {"title": "Postgresql Master-Slave Replication Setup On EC2", "description": "The master-slave database replication is a process of copying (syncing) data from a database on one server (the master) to a database on another server (the slaves) ...", "url": "https://www.linkedin.com/pulse/postgresql-master-slave-replication-setup-ec2-yogesh-bisht/"},
     {"title": "Introduction to Cloud PubSub and Use Case Scenario", "description": "Cloud Pub/Sub may be an easy topic from the coding point of view but implementing a system that can fully utilize its functionality may come across as a problem ...", "url": "https://www.linkedin.com/pulse/introduction-cloud-pubsub-use-case-scenario-yogesh-bisht/"},
     {"title": "Automate Django Project Setup Using Bash Script", "description": "In this article, we are going to learn about some fantastic stuff that will reduce your overhead with setting up a Django application or any other python application...", "url": "https://code-material.blogspot.com/which-is-the-best-module-bundler-webpack-rollup-parcel"}
   ]
+
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: "Kodeweich",
+    image: {
+      type: "image/jpeg",
+      url: "/assets/images/ogImage.jpg",
+      alt: "Kodeweich Logo",
+    },
+    description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",
+    type: "website",
+  });
+
+  if(isPageLoading){
+    return <ScreenLoader/>
+  }
+
   return (
     <section className={'max-w-4xl mx-auto py-8 px-4'}>
+      <Head>
+        <OpenGraph properties={ogProperties} />
+      </Head>
       <div className='flex flex-col-reverse items-start justify-between sm:flex-row sm:items-center'>
           <div>
             <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>

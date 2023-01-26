@@ -17,7 +17,9 @@ const Footer = dynamic(import('../../components/Layouts/Footer'));
 const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
 const Category = dynamic(import('../../components/Cards/Category'));
 const Tags = dynamic(import('../../components/Cards/Tags'));
-import { usePageLoading } from '../../lib/hooks';
+import useOpenGraph, { usePageLoading } from '../../lib/hooks';
+import { absUrl } from '../../lib/helper';
+import OpenGraph from '../../components/Seo/OpenGraph';
 const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
 
 
@@ -27,9 +29,6 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   const [articlesList, setArticleList] = useState(articles);
   const [searchValue, setSearchValue] = useState('');
   const { isPageLoading } = usePageLoading();
-  if(isPageLoading){
-    return <ScreenLoader/>
-  }
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
     setSearchValue(event.target.value);
@@ -56,8 +55,27 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
     }
   }
 
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: "Kodeweich",
+    image: {
+      type: "image/jpeg",
+      url: "/assets/images/ogImage.jpg",
+      alt: "Kodeweich Logo",
+    },
+    description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",
+    type: "website",
+  });
+
+  if(isPageLoading){
+    return <ScreenLoader/>
+  }
+
   return (
     <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
+        <Head>
+          <OpenGraph properties={ogProperties} />
+        </Head>
         <h1 className={`${inter.className} text-4xltext-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
           Blog
         </h1>
@@ -136,7 +154,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }catch(error){
     return {
       props: {},
-      revalidate: 10,
+      revalidate: 60,
     };
   }
 };

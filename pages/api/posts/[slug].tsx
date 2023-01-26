@@ -17,24 +17,28 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             return {slug: slug}
         })
 
-        const result = await prisma.articles.update({
-            where: {
-                slug: slug
-            },
-            data: {
-                title: title,
-                content: content,
-                featuredImage: featuredImage,
-                description: description,
-                slug: slug,
-                published: published,
-                updatedAt: Date.now(),
-                author: { connect: { email: "yogeshbisht.2307@gmail.com" } },
-                categories: {connect: connectCategory},
-                tags: {connect: connectTags}
-            }
-        })
-        res.json(result);
+        try{
+            await prisma.articles.update({
+                where: {
+                    slug: slug
+                },
+                data: {
+                    title: title,
+                    content: content,
+                    featuredImage: featuredImage,
+                    description: description,
+                    slug: slug,
+                    published: published,
+                    updatedAt: Date.now(),
+                    author: { connect: { email: "yogeshbisht.2307@gmail.com" } },
+                    categories: {connect: connectCategory},
+                    tags: {connect: connectTags}
+                }
+            })
+            return res.status(200).json({});
+        }catch(error){
+            return res.status(500).json({});
+        }
     }
     else if(req.method === "DELETE"){
         try{
@@ -45,7 +49,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             })
             return res.status(200).json({})
         }catch(error){
-            console.log(error)
             return res.status(500).json({})
         }
     }

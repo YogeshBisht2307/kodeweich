@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react'
-import { useRouter } from "next/router";
+import Router from "next/router";
+import toast from 'react-hot-toast';
 import { useAuth, usePageLoading } from '../../lib/hooks';
 import ScreenLoader from '../../components/ScreenLoader';
 
 const Login = () => {
-    const router = useRouter();
-    const [email, setEmail] = useState("");
+    const [uEmail, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const {user} = useAuth();
     useEffect(() => {
       if(user){
-        router.push("/admin/articles");
+        Router.push('/admin/articles');
       }
-    }, [user.email])
+    }, [user])
 
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>
@@ -25,16 +25,18 @@ const Login = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                email: email,
+                email: uEmail,
                 password: password
             })
           });
+          if(response.status !== 200){
+            throw Error("Invalid Credentials");
+          }
 
-          const user = await response.json()
-          console.log(user)
-          router.push("/admin/articles");
+          await response.json()
+          Router.push("/admin/articles");
         } catch (error) {
-          console.log(error);
+          toast.error("Unable to authenticated.")
         }
     };
   return (
@@ -49,7 +51,7 @@ const Login = () => {
                         <div>
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Your email</label>
                             <input 
-                                value={email}
+                                value={uEmail}
                                 onChange={(e)=> setEmail(e.target.value)}
                                 type="email"
                                 name="email" id="email" 

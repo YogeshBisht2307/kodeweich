@@ -1,6 +1,7 @@
 import { Inter } from '@next/font/google';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+import Router from 'next/router'
 import { NextPageWithLayout } from '../../page';
 import Head from 'next/head';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
@@ -10,25 +11,24 @@ import React, { useState, useEffect } from 'react';
 import {IAdminArticlePage} from '../../../interfaces'
 import DeleteModal from '../../../components/Cards/DeleteModal';
 import { useAuth, usePageLoading } from '../../../lib/hooks';
-import { useRouter } from 'next/router'
 import ScreenLoader from '../../../components/ScreenLoader';
+import prisma from '../../../lib/prisma';
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
-    const router = useRouter();
     const [selected, setSelected] = useState("");
-
-    const { isPageLoading } = usePageLoading();
-    if(isPageLoading) return <ScreenLoader/>
 
     const {user} = useAuth();
     useEffect(() => {
       if(!user){
-        router.push('/admin/login');
+        Router.push('/admin/login');
       }
-    }, [user.email])
+    }, [user])
+
+    const { isPageLoading } = usePageLoading();
+    if(isPageLoading) return <ScreenLoader/>
 
     return (
       <>
@@ -119,7 +119,6 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 60,
     };
   }catch(error){
-    console.log(error)
     return {
       props: {},
       revalidate: 60,

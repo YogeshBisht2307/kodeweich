@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import jwt, { Secret } from "jsonwebtoken";
 import { getCookie } from "cookies-next";
+import prisma from '../../lib/prisma';
 
 export interface UserJwtPayload extends jwt.JwtPayload {
     email: string
@@ -9,7 +10,7 @@ export interface UserJwtPayload extends jwt.JwtPayload {
     image?: string
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const token = getCookie(process.env.COOKIE_NAME as string, { req, res });
     if(!token){
         return res.status(403).json({"message": "Authorization Error"})
@@ -17,7 +18,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         const payload = jwt.verify(token as string, process.env.JWT_SECRET as Secret) as UserJwtPayload;
-        console.log(payload)
         const user =  await prisma.users.findUnique({
             where: {id: payload.userId}
         })
@@ -28,7 +28,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             image: user?.image
         });
       }catch (error) {
-        console.log(error)
         return res.status(403).json({"message": "Authorization Error"});
     }
 }

@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: "Wrong email or password!" });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as Secret, {
+    const token = jwt.sign({ userId: user.id,  }, process.env.JWT_SECRET as Secret, {
         expiresIn: `${process.env.JWT_EXPIRES_IN}d`,
     });
     setCookie(process.env.COOKIE_NAME as string, token, {

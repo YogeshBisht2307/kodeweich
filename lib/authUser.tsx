@@ -11,13 +11,13 @@ export interface UserJwtPayload extends jwt.JwtPayload {
 export async function authUser(req: any, res: any) {
     const token = getCookie(process.env.COOKIE_NAME as string, { req, res });
     if(!token){
-        return null
+        return null;
     }
 
     try {
-        const payload = jwt.verify(token as string, process.env.TOKEN_SECRET as Secret) as UserJwtPayload;
+        const payload = jwt.verify(token as string, process.env.JWT_SECRET as Secret) as UserJwtPayload;
         const user =  await prisma.users.findUnique({
-            where: {email: payload.email}
+            where: {id: payload.userId}
         })
         return {
             email: user?.email,

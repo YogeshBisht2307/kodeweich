@@ -26,9 +26,10 @@ const CategoryPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, ca
   const [articlesList, setArticleList] = useState(articles)
   const [searchValue, setSearchValue] = useState('');
   const { isPageLoading } = usePageLoading();
+
   useEffect(() => {
-    setArticleList(articles)
-  }, [slug])
+    setArticleList(articles);
+  }, [slug, articles])
 
   if(isPageLoading){
       return <ScreenLoader/>
@@ -67,7 +68,7 @@ const CategoryPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, ca
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>
-            {articlesList.map((article: IArticleBoxCard, index: Key) => (
+            {articlesList && articlesList.map((article: IArticleBoxCard, index: Key) => (
               <ArticleCard article={article} key={index}/>
             ))}
           </div>
@@ -98,7 +99,6 @@ CategoryPage.getLayout = (page) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-    console.log(params?.slug)
     try{
         const articleResponse = prisma.articles.findMany({
             where: {categories: {some: {slug: String(params?.slug)}}},
@@ -119,7 +119,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         });
 
         const articles = await articleResponse;
-        console.log(articles)
         const categories = await categoryResponse;
         const tags = await tagsResponse;
         articles.forEach(function(article: any) {
@@ -132,10 +131,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         };
     }
     catch(error){
-        console.log(error)
-        return {
-            notFound: true,
-        };
+      return {
+          notFound: true,
+      };
     }
   }
   

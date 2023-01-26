@@ -4,12 +4,29 @@ import { NextPageWithLayout } from './page';
 import BaseLayout from '../components/Layouts/BaseLayout';
 import TopBar from '../components/Layouts/TopBar';
 import Footer from '../components/Layouts/Footer';
+import useOpenGraph from '../lib/hooks';
+import { absUrl } from '../lib/helper';
+import OpenGraph from '../components/Seo/OpenGraph';
 
 const inter = Inter({ subsets: ['latin'] })
 
 const About: NextPageWithLayout = () => {
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: "Kodeweich",
+    image: {
+      type: "image/jpeg",
+      url: "/assets/images/ogImage.jpg",
+      alt: "Kodeweich Logo",
+    },
+    description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",
+    type: "website",
+  });
   return (
     <section className={`${inter.className} max-w-4xl mx-auto pt-8 pb-4 px-4`}>
+        <Head>
+          <OpenGraph properties={ogProperties} />
+        </Head>
         <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
           About
         </h1>
