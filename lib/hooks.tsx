@@ -29,11 +29,14 @@ export const usePageLoading = () => {
 };
 
 export const useAuth = () => {
-  const [user, setUser] = useState({
-    email: "",
-    name: "",
-    bio: "",
-    image: "",
+  const [userObj, setUserObj] = useState<any>({
+    user:{
+      email: "",
+      name: "",
+      bio: "",
+      image: "",
+    },
+    isLoggedIn: null
   });
   
   useEffect(() => {
@@ -43,14 +46,23 @@ export const useAuth = () => {
         if(response.status != 200){
           throw Error("Authorization Failure")
         }
-        setUser(await response.json());
+        const result = await response.json()
+        setUserObj({
+          ...setUserObj,
+          user: result,
+          isLoggedIn: true
+        });
       }catch(error){
         console.log(error)
+        setUserObj({
+          ...setUserObj,
+          isLoggedIn: false
+        });
       }
     })();
-  }, [user.email])
+  }, [userObj.user?.email])
 
-  return {user};
+  return userObj
 }
 
 

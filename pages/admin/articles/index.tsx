@@ -20,12 +20,12 @@ const inter = Inter({ subsets: ['latin'] })
 const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
     const [selected, setSelected] = useState("");
 
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     useEffect(() => {
-      if(!user){
+      if(isLoggedIn === false){
         Router.push('/admin/login');
       }
-    }, [user])
+    }, [user?.email, isLoggedIn])
 
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>

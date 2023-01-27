@@ -27,12 +27,12 @@ const CreateArticle: NextPageWithLayout = () => {
     const [category, setCategory] = useState("");
     const [newTags, setTags] = useState("");
 
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     useEffect(() => {
-      if(!user){
+      if(isLoggedIn === false){
         Router.push('/admin/login');
       }
-    }, [user]);
+    }, [user?.email, isLoggedIn]);
 
     const submitData = async (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -61,6 +61,9 @@ const CreateArticle: NextPageWithLayout = () => {
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>
 
+    if (!user || isLoggedIn === null) {
+      return <ScreenLoader/>
+    }
     return (
         <>
         <div className='max-w-4xl px-4 mx-auto'>

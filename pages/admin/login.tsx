@@ -8,12 +8,12 @@ const Login = () => {
     const [uEmail, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     useEffect(() => {
-      if(user){
+      if(isLoggedIn === true){
         Router.push('/admin/articles');
       }
-    }, [user])
+    }, [user?.email, isLoggedIn])
 
     const { isPageLoading } = usePageLoading();
     if(isPageLoading) return <ScreenLoader/>
