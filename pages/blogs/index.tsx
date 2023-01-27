@@ -84,7 +84,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>
-            {articlesList.map((article: IArticle, index: Key) => (
+            {articlesList && articlesList.map((article: IArticle, index: Key) => (
               <ArticleCard article={article} key={index}/>
             ))}
           </div>
