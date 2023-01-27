@@ -1,5 +1,6 @@
 import jwt, { Secret } from "jsonwebtoken";
 import { getCookie } from "cookies-next";
+import prisma from "./prisma";
 
 export interface UserJwtPayload extends jwt.JwtPayload {
     email: string
