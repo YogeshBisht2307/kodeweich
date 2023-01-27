@@ -14,12 +14,12 @@ import { authUser } from '../../../lib/authUser';
 import { usePageLoading } from '../../../lib/hooks';
 import ScreenLoader from '../../../components/ScreenLoader';
 import toast from 'react-hot-toast';
+import prisma from '../../../lib/prisma';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
   const user = await authUser(req, res);
-  console.log(user)
   if (!user) {
     return {
       redirect: {
