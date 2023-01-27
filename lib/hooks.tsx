@@ -6,7 +6,7 @@ import { OGProperties } from "../components/Seo/OpenGraph";
 
 export const usePageLoading = () => {
   const [isPageLoading, setIsPageLoading] = useState(false);
-
+  
   useEffect(() => {
     const routeEventStart = () => {
       setIsPageLoading(true);
@@ -14,7 +14,7 @@ export const usePageLoading = () => {
     const routeEventEnd = () => {
       setIsPageLoading(false);
     };
-
+    
     Router.events.on('routeChangeStart', routeEventStart);
     Router.events.on('routeChangeComplete', routeEventEnd);
     Router.events.on('routeChangeError', routeEventEnd);
@@ -24,7 +24,7 @@ export const usePageLoading = () => {
       Router.events.off('routeChangeError', routeEventEnd);
     };
   }, []);
-
+  
   return { isPageLoading };
 };
 
@@ -35,22 +35,24 @@ export const useAuth = () => {
     bio: "",
     image: "",
   });
-
+  
   useEffect(() => {
-   (async () => {
-    try{
-      const response = await fetch('/api/user');
-      if(response.status != 200){
-        throw Error("Authorization Failure")
+    (async () => {
+      try{
+        const response = await fetch('/api/user');
+        if(response.status != 200){
+          throw Error("Authorization Failure")
+        }
+        setUser(await response.json());
+      }catch(error){
+        console.log(error)
       }
-      setUser(await response.json());
-    } catch(error){
-    }
-   })();
+    })();
   }, [user.email])
 
   return {user};
 }
+
 
 type OGImage = {
   alt: string;
@@ -75,21 +77,21 @@ export const useOpenGraph = (data: PageOgData) => {
       site_name: "Kodeweich",
       description: data.description,
       image: data.image
-        ? {
-            type: data.image.type,
-            url: absUrl(data.image.url),
-            alt: data.image.alt || "",
-            height: data.image.height || "720",
-            width: data.image.width || "420",
-          }
-        : null,
+      ? {
+        type: data.image.type,
+        url: absUrl(data.image.url),
+        alt: data.image.alt || "",
+        height: data.image.height || "720",
+        width: data.image.width || "420",
+      }
+      : null,
       card: data.card || data.image ? "summary_large_image" : "summary",
       section: data.section,
       modified_time: data.modified_time,
       published_time: data.published_time,
     };
   }, [data]);
-
+  
   return ogProperties;
 };
 
