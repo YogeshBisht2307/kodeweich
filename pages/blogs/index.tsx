@@ -30,8 +30,6 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   const [searchValue, setSearchValue] = useState('');
   const { isPageLoading } = usePageLoading();
 
-  console.log(articlesList, categories, tags)
-
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
     setSearchValue(event.target.value);
     if (searchValue !== ""){

@@ -26,6 +26,7 @@ export async function authUser(req: any, res: any) {
             image: user?.image
         };
     } catch (error) {
+        console.log(error)
         return null
     }
 }

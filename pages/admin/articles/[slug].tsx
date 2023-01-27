@@ -19,6 +19,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
   const user = await authUser(req, res);
+  console.log(user)
   if (!user) {
     return {
       redirect: {
