@@ -1,67 +1,123 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { Key, useEffect, useState } from 'react';
-import {GetStaticProps} from 'next'
-import { Inter } from '@next/font/google';
+import {GetStaticPaths, GetStaticProps} from 'next'
 
-import prisma from '../../../lib/prisma';
 import { NextPageWithLayout } from '../../page';
+import { inter } from '../../../components/utils';
+import { usePageLoading } from '../../../lib/hooks';
+import { titleCaseSlug } from '../../../lib/helper';
 import { IArticleBoxCard, IArticleSlugPage } from '../../../interfaces';
-import BaseLayout from '../../../components/Layouts/BaseLayout';
+
+import { 
+  getArticlesByCategory,
+  getCategories,
+  getCategoriesSlug,
+  getTags
+} from '../../../middleware';
+
 import TopBar from '../../../components/Layouts/TopBar';
+import BaseLayout from '../../../components/Layouts/BaseLayout';
 import ArticleCard from '../../../components/Cards/ArticleCard';
 
-const SearchInput = dynamic(import('../../../components/Inputs/SearchInput'))
-const Footer = dynamic(import('../../../components/Layouts/Footer'));
-const ArticleWidget = dynamic(import('../../../components/Cards/ArticleWidget'));
-const Category = dynamic(import('../../../components/Cards/Category'));
-const Tags = dynamic(import('../../../components/Cards/Tags'));
-import { usePageLoading } from '../../../lib/hooks';
-const ScreenLoader = dynamic(() => import('../../../components/ScreenLoader'), { ssr: false });
+const Tags = dynamic(import('../../../components/Cards/Tags'), { ssr: false });
+const Footer = dynamic(import('../../../components/Layouts/Footer'), { ssr: false });
+const Category = dynamic(import('../../../components/Cards/Category'), { ssr: false });
+const ScreenLoader = dynamic(import('../../../components/ScreenLoader'), { ssr: false });
+const SearchInput = dynamic(import('../../../components/Inputs/SearchInput'), { ssr: false });
+const ArticleWidget = dynamic(import('../../../components/Cards/ArticleWidget'), { ssr: false });
 
 
-const inter = Inter({ subsets: ['latin'] })
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  try{
+    const articleResponse = getArticlesByCategory(String(params?.slug))
+    const categoryResponse = getCategories();
+    const tagsResponse = getTags();
+    
+    const articles = await articleResponse;
+    const categories = await categoryResponse;
+    const tags = await tagsResponse;
+    
+    if(!articles){
+      return {
+        notFound: true,
+      };
+    }
+    return {
+      props: {slug: params?.slug, articles, categories, tags},
+      revalidate: 10, 
+    };
+  }
+  catch(error){
+    return {
+      notFound: true,
+    };
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async() => {
+  try{
+    const response = await getCategoriesSlug();
+    return {
+      paths: response.map((slug: string) => ({
+        params: {slug}
+      })),
+      fallback: true
+    }
+  }catch(error){
+    return{
+      paths: [],
+      fallback: true
+    }
+  }
+}
 
 const CategoryPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, categories, tags }) => {
-  const [articlesList, setArticleList] = useState(articles)
-  const [searchValue, setSearchValue] = useState('');
+  const [articlesList, setArticleList] = useState<Array<any>>(articles)
+  const [searchValue, setSearchValue] = useState<string>('');
   const { isPageLoading } = usePageLoading();
 
   useEffect(() => {
     setArticleList(articles);
   }, [slug, articles])
 
-  if(isPageLoading){
-      return <ScreenLoader/>
-  }
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchValue(event.target.value)
+    setSearchValue(event.target.value);
     if (searchValue !== ""){
       const filteredData = articles.filter((article: IArticleBoxCard) => {
         return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
       })
-      setArticleList(filteredData)
+      setArticleList(filteredData);
     }else{
-      setArticleList(articles)
+      setArticleList(articles);
     }
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setSearchValue(event.currentTarget.search.value)
+    event.preventDefault();
+    setSearchValue(event.currentTarget.search.value);
     if (searchValue !== ""){
       const filteredData = articles.filter((article: IArticleBoxCard) => {
         return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
       })
-      setArticleList(filteredData)
+      setArticleList(filteredData);
     }else{
-      setArticleList(articles)
+      setArticleList(articles);
     }
   }
+
+  if(isPageLoading){
+    return <ScreenLoader/>
+  }
+
   return (
     <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
-        <h1 className={`${inter.className} text-4xltext-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
-          Blog
+        <Head>
+          <title>{`${titleCaseSlug(slug)} : Kodeweich`}</title>
+        </Head>
+
+        <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
+          {titleCaseSlug(slug)}
         </h1>
         <p className={`${inter.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
           I&apos;ve been writing online since 2014, mostly about web development and tech careers. In total, I&apos;ve written 52 articles on my blog. Use the search below to filter by title.
@@ -88,68 +144,9 @@ export default CategoryPage;
 CategoryPage.getLayout = (page) => {
   return (
     <BaseLayout>
-      <Head>
-        <title>Kodeweich: Blogs</title>
-      </Head>
       <TopBar />
       {page}
       <Footer/>
     </BaseLayout>
   );
 };
-
-export const getStaticProps: GetStaticProps = async ({params}) => {
-    try{
-        const articleResponse = prisma.articles.findMany({
-            where: {categories: {some: {slug: String(params?.slug)}}},
-            select: {
-                title: true,
-                slug: true,
-                description: true,
-                createdAt: true,
-                updatedAt: true,
-                author: {select: { name: true }},
-            }
-        });
-        const categoryResponse = prisma.categories.findMany({
-            take: 5, select: {title: true, slug: true}
-        });
-        const tagsResponse = prisma.tags.findMany({
-          take: 10, select: {title: true, slug: true}
-        });
-
-        const articles = await articleResponse;
-        const categories = await categoryResponse;
-        const tags = await tagsResponse;
-        articles.forEach(function(article: any) {
-          article.updatedAt = parseInt(article.updatedAt.toString())
-          article.createdAt = parseInt(article.createdAt.toString())
-        })
-        return {
-          props: {slug: params?.slug, articles, categories, tags},
-          revalidate: 10, 
-        };
-    }
-    catch(error){
-      return {
-          notFound: true,
-      };
-    }
-  }
-  
-export async function getStaticPaths() {
-    try{
-      const categoryResponse = await prisma.categories.findMany({select: {slug: true}});
-      return {
-          paths: categoryResponse.map(({slug}: {slug: string}) => ({
-              params: {slug}
-          })),
-        fallback: true,
-      }
-    }catch(error){
-      return{
-        paths: [],
-        fallback: true
-      }
-    }
-}

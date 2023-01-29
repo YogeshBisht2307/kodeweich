@@ -4,7 +4,7 @@ import { NextPageWithLayout } from './page';
 import BaseLayout from '../components/Layouts/BaseLayout';
 import TopBar from '../components/Layouts/TopBar';
 import Footer from '../components/Layouts/Footer';
-import useOpenGraph from '../lib/hooks';
+import {useOpenGraph} from '../lib/hooks';
 import { absUrl } from '../lib/helper';
 import OpenGraph from '../components/Seo/OpenGraph';
 

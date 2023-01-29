@@ -1,7 +1,6 @@
 import Router from 'next/router';
-import { useEffect, useState } from 'react';
-import { useMemo } from "react";
 import { absUrl } from "../lib/helper";
+import { useEffect, useState, useMemo } from 'react';
 import { OGProperties } from "../components/Seo/OpenGraph";
 
 export const usePageLoading = () => {
@@ -30,15 +29,10 @@ export const usePageLoading = () => {
 
 export const useAuth = () => {
   const [userObj, setUserObj] = useState<any>({
-    user:{
-      email: "",
-      name: "",
-      bio: "",
-      image: "",
-    },
+    user:{email: "", name: "", bio: "", image: ""},
     isLoggedIn: null
   });
-  
+
   useEffect(() => {
     (async () => {
       try{
@@ -47,23 +41,16 @@ export const useAuth = () => {
           throw Error("Authorization Failure")
         }
         const result = await response.json()
-        setUserObj({
-          ...setUserObj,
-          user: result,
-          isLoggedIn: true
-        });
+        setUserObj({...setUserObj, user: result, isLoggedIn: true});
       }catch(error){
-        console.log(error)
-        setUserObj({
-          ...setUserObj,
-          isLoggedIn: false
-        });
+        setUserObj({...setUserObj, isLoggedIn: false});
       }
     })();
+
   }, [userObj.user?.email])
 
-  return userObj
-}
+  return userObj;
+};
 
 
 type OGImage = {
@@ -106,5 +93,3 @@ export const useOpenGraph = (data: PageOgData) => {
   
   return ogProperties;
 };
-
-export default useOpenGraph;

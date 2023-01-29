@@ -1,84 +1,93 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { Inter } from '@next/font/google';
-import { GetServerSideProps } from 'next';
-import { NextPageWithLayout } from '../page';
-import prisma from '../../lib/prisma';
-import BaseLayout from '../../components/Layouts/BaseLayout';
-import TopBar from '../../components/Layouts/TopBar';
-import ArticleDetail from '../../components/Cards/ArticleDetail';
-import {IArticleDefailtPage } from '../../interfaces';
-import useOpenGraph, { usePageLoading } from '../../lib/hooks';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+
 import { absUrl } from '../../lib/helper';
+import { NextPageWithLayout } from '../page';
+import { inter } from '../../components/utils';
+import { IArticleDefailtPage } from '../../interfaces';
+
+import { useOpenGraph, usePageLoading } from '../../lib/hooks';
+import { getArticleBySlug, getArticlesSlug, getCategories, getTags } from '../../middleware';
+
+import TopBar from '../../components/Layouts/TopBar';
 import OpenGraph from '../../components/Seo/OpenGraph';
-import { useEffect } from 'react';
-const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
+import BaseLayout from '../../components/Layouts/BaseLayout';
+import ArticleDetail from '../../components/Cards/ArticleDetail';
 
-const Footer = dynamic(import('../../components/Layouts/Footer'));
-const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
-const Category = dynamic(import('../../components/Cards/Category'));
-const Tags = dynamic(import('../../components/Cards/Tags'));
+const Tags = dynamic(import('../../components/Cards/Tags'), { ssr: false });
+const Footer = dynamic(import('../../components/Layouts/Footer'), { ssr: false });
+const Category = dynamic(import('../../components/Cards/Category'), { ssr: false });
+const ScreenLoader = dynamic(import('../../components/ScreenLoader'), { ssr: false });
+const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'), { ssr: false });
 
-const inter = Inter({ subsets: ['latin'] })
 
-
-export const getServerSideProps: GetServerSideProps = async ({req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, max-age=300, s-maxage=300, stale-while-revalidate=59'
-    )
-
+export const getStaticProps: GetStaticProps = async ({params}) => {
     try{
-        const articleResponse = prisma.articles.findUnique({
-            where: {slug: String(params?.slug)},
-            include: {author: {select: { name: true }}}
-        });
-        const categoryResponse = prisma.categories.findMany({
-            take: 5, select: {title: true, slug: true}
-        });
-        const tagsResponse = prisma.tags.findMany({
-          take: 10, select: {title: true, slug: true}
-        });
-
-        const articleResult = await articleResponse;
+        const articleResponse = getArticleBySlug(String(params?.slug));
+        const categoryResponse = getCategories();
+        const tagsResponse = getTags();
+        
+        const article = await articleResponse;
         const categories = await categoryResponse;
         const tags = await tagsResponse;
-        if(!articleResult){
-            return {
-                notFound: true
-            }
+        return {
+            props: {article, categories, tags},
+            revalidate: 60, 
+        };
+    }catch(error){
+        return {
+            notFound: true,
+        };
+    }
+}
+
+export const getStaticPaths: GetStaticPaths = async() => {
+    try{
+        const response = await getArticlesSlug();
+        return {
+            paths: response.map((slug: string) => ({
+                params: {slug}
+            })),
+            fallback: true,
         }
-        const article = {...articleResult, ...{
-            updatedAt: parseInt(articleResult.updatedAt.toString()),
-            createdAt: parseInt(articleResult.createdAt.toString())
-        }}
-
-        return {
-          props: {article, categories, tags},
-        };
+    }catch(error){
+        return{
+            paths: [],
+            fallback: true
+        }
     }
-    catch(error){
-        return {
-            notFound: true
-        };
+}
+
+const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}: InferGetStaticPropsType<typeof getStaticProps>) => {
+    var openGraphData = null;
+    if(!article){
+        openGraphData = {
+            url: "",
+            title: "",
+            image: {type: "image/jpeg", url: "", alt: ""},
+            description: "",
+            type: "article",
+            author: "",
+            section: ""
+        }
+    }else{
+        openGraphData = {
+            url: absUrl(`/blogs/${article.slug}`),
+            title: article.title,
+            image: {
+                type: "image/jpeg",
+                url: article.featuredImage,
+                alt: article.title,
+            },
+            description: article.description,
+            type: "article",
+            author: article.author.name,
+            section: String(categories[0].title)
+        }
     }
-};
 
-const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}) => {
-    const ogProperties = useOpenGraph({
-        url: absUrl(`/blogs/${article.slug}`),
-        title: article.title,
-        image: {
-          type: "image/jpeg",
-          url: article.featuredImage,
-          alt: article.title,
-        },
-        description: article.description,
-        type: "article",
-        author: article.author.name,
-        section: "coding & programming"
-      });
-
+    const ogProperties = useOpenGraph(openGraphData);
     const { isPageLoading } = usePageLoading();
     if(isPageLoading){
         return <ScreenLoader/>
@@ -87,18 +96,20 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
     return (
         <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
             <Head>
+                <title>{ `${article?.title} : Kodeweich` }</title>
                 <OpenGraph properties={ogProperties} />
             </Head>
-            <h1 className={`${inter.className} text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article.title}</h1>
+
+            <h1 className={`${inter.className} text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article?.title}</h1>
             <p className={`${inter.className} font-med max-w-3xl text-slate-600 md:text-md lg:text-md dark:text-slate-400 lg:mb-8 mb-6`}>
-                {article.description}
+                {article?.description}
             </p>
             <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-6`}>
                 <div className={`col-span-2`}>
                     <ArticleDetail article={article}/>
                 </div>
                 <div className={`${inter.className}`}>
-                    <ArticleWidget slug={article.slug}/>
+                    <ArticleWidget slug={article?.slug}/>
                     <Category categories={categories}/>
                     <Tags tags={tags}/>
                 </div>
@@ -106,19 +117,15 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
         </section>
     )
 }
-
+       
 export default ArticleDetailPage;
-
+        
 ArticleDetailPage.getLayout = (page) => {
     return (
         <BaseLayout>
-            <Head>
-                <title>Kodeweich</title>
-            </Head>
             <TopBar />
             {page}
             <Footer/>
         </BaseLayout>
     );
 };
-  

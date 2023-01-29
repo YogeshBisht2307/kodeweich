@@ -2,7 +2,7 @@ export type OGProperties = {
     locale?: "en_US" | "en_IN";
     url: string;
     title: string;
-    type: "article" | "website";
+    type: string;
     description: string;
     site_name: string;
     image: {

@@ -1,12 +1,15 @@
 import dynamic from 'next/dynamic';
+import { useMemo, useRef } from 'react';
 
-const QuillNoSSRWrapper = dynamic(import('react-quill'), {
-  ssr: false,
-  loading: () => <p>Loading ...</p>,
-});
-
-export default QuillNoSSRWrapper;
-
+const ReactQuill = dynamic(
+  async () => {
+    const { default: RQ } = await import("react-quill");
+    return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+  },
+  {
+    ssr: false,
+  }
+);
 
 export const QuillModules = {
   toolbar: [
@@ -34,3 +37,20 @@ export const QuillModules = {
     matchVisual: false,
   },
 }
+
+const QuillNoSSRWrapper = ({value, onChange}: any) => {
+  const editorRef = useRef(null);
+  const modules = useMemo(() => (QuillModules), []);
+  return (
+      <ReactQuill
+          theme={"snow"}
+          modules={modules}
+          value={value}
+          onChange={onChange}
+          forwardedRef={editorRef}
+          className={`block w-full my-4 text-sm rounded-lg focus:outline-none dark:border-gray-600`}
+      />
+  )
+}
+
+export default QuillNoSSRWrapper;

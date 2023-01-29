@@ -1,6 +1,6 @@
 import jwt, { Secret } from "jsonwebtoken";
 import { getCookie } from "cookies-next";
-import prisma from "./prisma";
+import { getUser } from "../middleware/user";
 
 export interface UserJwtPayload extends jwt.JwtPayload {
     email: string
@@ -17,9 +17,7 @@ export async function authUser(req: any, res: any) {
 
     try {
         const payload = jwt.verify(token as string, process.env.JWT_SECRET as Secret) as UserJwtPayload;
-        const user =  await prisma.users.findUnique({
-            where: {id: payload.userId}
-        })
+        const user = await getUser(payload.userId)
         return {
             email: user?.email,
             name: user?.name,

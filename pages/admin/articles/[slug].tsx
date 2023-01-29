@@ -1,22 +1,24 @@
-import { Inter } from '@next/font/google';
-import { GetServerSideProps } from 'next';
-import { NextPageWithLayout } from '../../page';
 import Head from 'next/head';
-import BaseLayout from '../../../components/Layouts/BaseLayout';
+import toast from 'react-hot-toast';
+import React, { useState } from 'react';
+import { GetServerSideProps } from 'next';
+import Router, { useRouter } from 'next/router';
+
+import { NextPageWithLayout } from '../../page';
+import { authUser } from '../../../lib/SSContext';
+import { inter } from '../../../components/utils';
+import { usePageLoading } from '../../../lib/hooks';
+import { IUpdateArticlePage } from '../../../interfaces';
+import { getArticleBySlugForAdmin } from '../../../middleware/articles';
+
 import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
-import React, { useState } from 'react';
-import Router, { useRouter } from 'next/router';
-import QuillNoSSRWrapper, {QuillModules} from '../../../components/RichText';
-import {IUpdateArticlePage} from '../../../interfaces';
-import 'react-quill/dist/quill.snow.css';
-import { authUser } from '../../../lib/authUser';
-import { usePageLoading } from '../../../lib/hooks';
 import ScreenLoader from '../../../components/ScreenLoader';
-import toast from 'react-hot-toast';
-import prisma from '../../../lib/prisma';
+import BaseLayout from '../../../components/Layouts/BaseLayout';
+import QuillNoSSRWrapper from '../../../components/RichText';
 
-const inter = Inter({ subsets: ['latin'] })
+import 'react-quill/dist/quill.snow.css';
+
 
 export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
   const user = await authUser(req, res);
@@ -29,15 +31,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       props: {},
     };
   }
+
   try{
-      const articleResponse = await prisma.articles.findUnique({
-          where: {slug: String(params?.slug)},
-          include: {
-              author: {select: { name: true }},
-              tags: true,
-              categories: true
-          }
-      });
+      const articleResponse = await getArticleBySlugForAdmin(String(params?.slug))
       if(!articleResponse){
         return {
           notFound: true,
@@ -45,19 +41,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       }
 
       const {tags, categories, ...other} = articleResponse;
-      const tagsSlugArry = articleResponse?.tags.map(
+      const tagsSlugArray = articleResponse?.tags.map(
         ({slug}: {slug: string}) => {return slug}
       );
+
       const categoriesSlugArray = articleResponse?.categories.map(
         ({slug}: {slug: string}) => {return slug}
       );
-      const article = {...other, ...{
+
+      const article =  {...other, ...{
         updatedAt: parseInt(other.updatedAt.toString()),
         createdAt: parseInt(other.createdAt.toString())
-      }}
-      
+      }};
+
       return {
-        props: {article, tags: tagsSlugArry, categories: categoriesSlugArray},
+        props: {article, tags: tagsSlugArray, categories: categoriesSlugArray},
       };
   }
   catch(error){
@@ -77,12 +75,12 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
     }
 
     const router = useRouter();
+    const { isPageLoading } = usePageLoading();
     const [editor, setEditor] = useState<any>(null);
-
-    const [articleInfo, setArticleInfo] = useState(initialState);
-    const [content, setContent] = useState(article.content);
-    const [category, setCategory] = useState(categories.toString());
-    const [newTags, setTags] = useState(tags.toString());
+    const [newTags, setTags] = useState<string>(tags.toString());
+    const [content, setContent] = useState<string>(article.content);
+    const [category, setCategory] = useState<string>(categories.toString());
+    const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
 
     const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
       setEditor(editor);
@@ -95,11 +93,11 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
       const pres = cont.querySelectorAll("pre.ql-syntax");
       pres.forEach((element)=>{
         if(element.getElementsByTagName('code').length > 0){
-            return
+            return;
         }
-        element.innerHTML = `<code>${element.innerHTML}</code>`
+        element.innerHTML = `<code>${element.innerHTML}</code>`;
       })
-      return cont.innerHTML
+      return cont.innerHTML;
     }
 
     const submitData = async (e: React.SyntheticEvent) => {
@@ -121,14 +119,14 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
 
           if(response.status !== 200) throw Error("Unable to update article.");
           router.push('/admin/articles');
-
         } catch (error) {
-          toast.error("Unable to update article", {duration: 5000})
+          toast.error("Unable to update article", {duration: 5000});
         }
     };
 
-    const { isPageLoading } = usePageLoading();
-    if(isPageLoading) return <ScreenLoader/>
+    if(isPageLoading){
+      return <ScreenLoader/>
+    }
 
     return (
         <>
@@ -201,9 +199,6 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
             </div>
             <QuillNoSSRWrapper
                 value={content}
-                modules={QuillModules}
-                theme={"snow"}
-                className={`block w-full my-4 text-sm rounded-lg focus:outline-none dark:border-gray-600`}
                 onChange={handleQuillOnchange}
             />
             <input

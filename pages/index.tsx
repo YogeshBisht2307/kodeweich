@@ -9,7 +9,7 @@ import TopBar from '../components/Layouts/TopBar';
 import HeroImage from '../assets/images/hero.png'
 import Footer from '../components/Layouts/Footer';
 import BoxCard from '../components/Cards/BoxCard';
-import useOpenGraph, { usePageLoading } from '../lib/hooks';
+import { useOpenGraph, usePageLoading } from '../lib/hooks';
 import { absUrl } from '../lib/helper';
 import OpenGraph from '../components/Seo/OpenGraph';
 const ScreenLoader = dynamic(() => import('../components/ScreenLoader'), { ssr: false });

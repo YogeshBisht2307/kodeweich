@@ -1,33 +1,60 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { GetStaticProps } from 'next';
-import { Inter } from '@next/font/google';
 import React, { Key, useState } from 'react';
-import { InferGetStaticPropsType } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 
-import prisma from '../../lib/prisma';
+import { absUrl } from '../../lib/helper';
 import { NextPageWithLayout } from '../page';
+import { inter } from '../../components/utils';
+
+import { useOpenGraph, usePageLoading } from '../../lib/hooks';
+import { getArticles, getTags, getCategories } from '../../middleware';
 import { IArticle, IArticleBoxCard, IBlogPage } from '../../interfaces';
-import BaseLayout from '../../components/Layouts/BaseLayout';
+
 import TopBar from '../../components/Layouts/TopBar';
+import OpenGraph from '../../components/Seo/OpenGraph';
+import BaseLayout from '../../components/Layouts/BaseLayout';
 import ArticleCard from '../../components/Cards/ArticleCard';
 
-const SearchInput = dynamic(import('../../components/Inputs/SearchInput'))
-const Footer = dynamic(import('../../components/Layouts/Footer'));
-const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'));
-const Category = dynamic(import('../../components/Cards/Category'));
-const Tags = dynamic(import('../../components/Cards/Tags'));
-import useOpenGraph, { usePageLoading } from '../../lib/hooks';
-import { absUrl } from '../../lib/helper';
-import OpenGraph from '../../components/Seo/OpenGraph';
-const ScreenLoader = dynamic(() => import('../../components/ScreenLoader'), { ssr: false });
+const Tags = dynamic(import('../../components/Cards/Tags'), { ssr: false });
+const Footer = dynamic(import('../../components/Layouts/Footer'), { ssr: false });
+const Category = dynamic(import('../../components/Cards/Category'), { ssr: false });
+const ScreenLoader = dynamic(import('../../components/ScreenLoader'), { ssr: false });
+const SearchInput = dynamic(import('../../components/Inputs/SearchInput'), { ssr: false });
+const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'), { ssr: false });
 
 
-const inter = Inter({ subsets: ['latin'] })
+export const getStaticProps: GetStaticProps = async () => {
+  try{
+    const articleResponse = getArticles();
+    const categoryResponse = getCategories();
+    const tagsResponse = getTags();
+    
+    const articles = await articleResponse;
+    const categories = await categoryResponse;
+    const tags = await tagsResponse;
+    if(!articles){
+      return{
+        props: {},
+        revalidate: 60
+      }
+    }
+
+    return {
+      props: { articles, categories, tags },
+      revalidate: 60
+    };
+  }catch(error){
+    return {
+      props: {},
+      revalidate: 60
+    };
+  }
+};
 
 const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [articlesList, setArticleList] = useState(articles);
-  const [searchValue, setSearchValue] = useState('');
+  const [articlesList, setArticleList] = useState<Array<any>>(articles);
+  const [searchValue, setSearchValue] = useState<string>('');
   const { isPageLoading } = usePageLoading();
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -74,10 +101,12 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   return (
     <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
         <Head>
+          <title>Kodeweich: Blogs</title>
           <OpenGraph properties={ogProperties} />
         </Head>
-        <h1 className={`${inter.className} text-4xltext-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
-          Blog
+
+        <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
+          Blogs
         </h1>
         <p className={`${inter.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
           I have been coding for several years and have experience working with a variety of programming languages and frameworks. My goal with this blog is to share my knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
@@ -104,57 +133,9 @@ export default Blogs;
 Blogs.getLayout = (page) => {
   return (
     <BaseLayout>
-      <Head>
-        <title>Kodeweich: Blogs</title>
-      </Head>
       <TopBar />
       {page}
       <Footer/>
     </BaseLayout>
   );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  try{
-    const articleResponse = prisma.articles.findMany({
-      where: { published: true },
-      select: {
-        title: true,
-        slug: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-        author: {select: { name: true }},
-      }
-    });
-    const categoryResponse = prisma.categories.findMany({
-        take: 5, select: {title: true, slug: true}
-    });
-    const tagsResponse = prisma.tags.findMany({
-      take: 10, select: {title: true, slug: true}
-    });
-    
-    const articles = await articleResponse;
-    const categories = await categoryResponse;
-    const tags = await tagsResponse;
-    if(!articles || !categories || !tags){
-      return{
-        notFound: true
-      }
-    }
-    articles.forEach(function(article: any) {
-      article.updatedAt = parseInt(article.updatedAt.toString())
-      article.createdAt = parseInt(article.createdAt.toString())
-    })
-
-    return {
-      props: { articles, categories, tags },
-      revalidate: 60,
-    };
-  }catch(error){
-    return {
-      props: {},
-      revalidate: 60,
-    };
-  }
 };
