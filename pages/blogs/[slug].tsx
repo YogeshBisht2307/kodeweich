@@ -100,12 +100,12 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
                 <OpenGraph properties={ogProperties} />
             </Head>
 
-            <h1 className={`${inter.className} text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article?.title}</h1>
+            <h1 className={`${inter.className} capitalize text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article?.title}</h1>
             <p className={`${inter.className} font-med max-w-3xl text-slate-600 md:text-md lg:text-md dark:text-slate-400 lg:mb-8 mb-6`}>
                 {article?.description}
             </p>
             <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-6`}>
-                <div className={`col-span-2`}>
+                <div className={`col-span-2 relative`}>
                     <ArticleDetail article={article}/>
                 </div>
                 <div className={`${inter.className}`}>

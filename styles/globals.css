@@ -98,6 +98,16 @@ a {
   list-style-position: inside;
 }
 
+.article-detail a{
+  font-weight: 500;
+  color: #0303b6;
+}
+
+
+.article-detail a:hover{
+  text-decoration: underline;
+}
+
 @media (max-width: 768px){
   .article-detail pre{
     max-height: 70vh;

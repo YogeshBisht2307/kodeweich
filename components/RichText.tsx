@@ -11,36 +11,51 @@ const ReactQuill = dynamic(
   }
 );
 
-export const QuillModules = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    ['blockquote', 'code-block'],
-    [
-      { list: 'ordered' },
-      { list: 'bullet' },
-      { indent: '-1' },
-      { indent: '+1' },
-    ],
-    [{ 'script': 'sub' }, { 'script': 'super' }],
-    [{ 'indent': '-1' }, { 'indent': '+1' }],
-    [{ 'direction': 'rtl' }],
-    [{ 'size': ['small', false, 'large', 'huge'] }],
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    [{ 'color': [] }, { 'background': [] }],
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-    ['clean'],
-    ['link', 'image', 'video'],
-  ],
-  syntax: true,
-  clipboard: {
-    matchVisual: false,
-  },
-}
-
 const QuillNoSSRWrapper = ({value, onChange}: any) => {
-  const editorRef = useRef(null);
-  const modules = useMemo(() => (QuillModules), []);
+  const editorRef = useRef<any>(null);
+
+  const imageHandler = () => {
+    const editor = editorRef.current.getEditor();
+    const range = editor.getSelection();
+    // show a cusome model
+    const value = prompt("Please enter the image URL")
+
+    if (value && range) {
+      editor.insertEmbed(range.index, "image", value, "user")
+    }
+  };
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        ['blockquote', 'code-block'],
+        [
+          { list: 'ordered' },
+          { list: 'bullet' },
+          { indent: '-1' },
+          { indent: '+1' },
+        ],
+        [{ 'script': 'sub' }, { 'script': 'super' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+        ['clean'],
+        ['link', 'image', 'video'],
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    },
+    syntax: true,
+    clipboard: {
+      matchVisual: false,
+    },
+  }), []);
   return (
       <ReactQuill
           theme={"snow"}
