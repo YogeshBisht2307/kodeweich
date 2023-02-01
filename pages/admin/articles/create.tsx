@@ -11,7 +11,7 @@ import TopBar from '../../../components/Layouts/TopBar';
 import Footer from '../../../components/Layouts/Footer';
 import ScreenLoader from '../../../components/ScreenLoader';
 import BaseLayout from '../../../components/Layouts/BaseLayout';
-import QuillNoSSRWrapper, { QuillModules } from '../../../components/RichText';
+import QuillNoSSRWrapper from '../../../components/RichText';
 import 'react-quill/dist/quill.snow.css';
 
 
@@ -28,8 +28,14 @@ const CreateArticle: NextPageWithLayout = () => {
     const [content, setContent] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [newTags, setTags] = useState<string>("");
+    const [editor, setEditor] = useState<any>(null);
     const { isPageLoading } = usePageLoading();
     const {user, isLoggedIn} = useAuth();
+
+    const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
+      setEditor(editor);
+      setContent(text);
+    }
 
     useEffect(() => {
       if(isLoggedIn === false){
@@ -37,13 +43,33 @@ const CreateArticle: NextPageWithLayout = () => {
       }
     }, [user?.email, isLoggedIn]);
 
+    const modifyContent = () => {
+      const cont = document.createElement("div");
+      cont.innerHTML = editor?.getHTML();
+      const pres = cont.querySelectorAll("pre.ql-syntax");
+      const images = cont.querySelectorAll("img");
+      images.forEach((img) => {
+        img.setAttribute("alt", img.currentSrc.split("/")[5].split(".")[0].replaceAll("-", " "))
+      })
+
+      pres.forEach((element)=>{
+        if(element.getElementsByTagName('code').length > 0){
+            return;
+        }
+        element.innerHTML = `<code>${element.innerHTML}</code>`;
+      })
+      return cont.innerHTML;
+    }
+
     const submitData = async (e: React.SyntheticEvent) => {
       e.preventDefault();
+      const updatedContent = editor ? modifyContent() : content;
+
       try {
         const body = { 
           ...articleInfo,
           ...{categories: category.replace(/ /g,'').split(',')},
-          content: content,
+          content: updatedContent,
           userEmail: user.email,
           tags: newTags.replace(/ /g,'').split(',')
         }
@@ -138,11 +164,8 @@ const CreateArticle: NextPageWithLayout = () => {
               </div>
           </div>
           <QuillNoSSRWrapper
-              value={content}
-              modules={QuillModules}
-              theme={"snow"}
-              className={`block w-full my-4 text-sm rounded-lg focus:outline-none dark:border-gray-600`}
-              onChange={setContent}
+            value={content}
+            onChange={handleQuillOnchange}
           />
           <input
             className={`${inter.className} mr-4 py-2 cursor-pointer rounded-md bg-slate-800 dark:bg-slate-300 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}

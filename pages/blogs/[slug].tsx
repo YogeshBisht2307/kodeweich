@@ -100,7 +100,11 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
                 <OpenGraph properties={ogProperties} />
             </Head>
 
-            <h1 className={`${inter.className} capitalize text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>{article?.title}</h1>
+            <h1 className={`${inter.className} capitalize text-3xl font-semibold max-w-3xl text-slate-800 sm:text-3xl sm:font-extrabold md:text-4xl dark:text-slate-300 mb-2`}>{article?.title}</h1>
+            <div className={`my-4 flex justify-between items-center`}>
+                <span className={`text-sm p-2 rounded text-slate-600 dark:bg-slate-800 bg-slate-200 dark:hover:text-slate-400 transition dark:text-slate-500`}>{`${new Date(Number(article?.updatedAt)).toDateString()}`}</span>
+                <span className={`text-sm p-2 rounded text-slate-600 dark:bg-slate-800 bg-slate-200 dark:hover:text-slate-400 transition dark:text-slate-500`}>{article?.author?.name}</span>
+            </div>
             <p className={`${inter.className} font-med max-w-3xl text-slate-600 md:text-md lg:text-md dark:text-slate-400 lg:mb-8 mb-6`}>
                 {article?.description}
             </p>
