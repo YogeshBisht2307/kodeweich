@@ -78,6 +78,32 @@ const Footer: React.FC<IFooter> = () => {
                         py-1
                     `}>Instagram</Link>
                 </div>
+                <div className='flex flex-col self-start w-full'>
+                    <Link href={`/admin/login`} target={"_blank"} className={`
+                        ${inter.className}
+                        max-w-xl
+                        font-sm
+                        md:text-md
+                        lg:text-md
+                        text-slate-500 
+                        hover:text-slate-600
+                        transition
+                        py-1
+                    `}>Privacy Policy</Link>
+                    <Link href={`/admin/login`} target={"_blank"} className={`
+                        ${inter.className}
+                        max-w-xl
+                        font-sm
+                        md:text-md
+                        lg:text-md
+                        text-slate-500 
+                        hover:text-slate-600
+                        transition
+                        md:flex
+                        hidden
+                        py-1
+                    `}>Manage Blog</Link>
+                </div>
             </div>
             <div className={'pt-16 pb-2 text-sm text-slate-500 dark:text-slate-400  font-semibold'}>Copyright © 2023 Kodeweich</div>
         </footer>

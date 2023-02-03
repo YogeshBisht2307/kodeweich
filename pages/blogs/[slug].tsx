@@ -109,10 +109,10 @@ const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, ca
                 {article?.description}
             </p>
             <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-6`}>
-                <div className={`col-span-2 relative`}>
+                <div className={`col-span-2 relative min-h-screen`}>
                     <ArticleDetail article={article}/>
                 </div>
-                <div className={`${inter.className}`}>
+                <div className={`${inter.className} sticky top-0 h-full`}>
                     <ArticleWidget slug={article?.slug}/>
                     <Category categories={categories}/>
                     <Tags tags={tags}/>
