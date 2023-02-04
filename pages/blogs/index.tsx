@@ -5,7 +5,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import { absUrl } from '../../lib/helper';
 import { NextPageWithLayout } from '../page';
-import { inter } from '../../components/utils';
+import { poppins700, poppins400 } from '../../components/utils';
 
 import { useOpenGraph, usePageLoading } from '../../lib/hooks';
 import { getArticles, getTags, getCategories } from '../../middleware';
@@ -99,16 +99,16 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   }
 
   return (
-    <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
+    <section className={`max-w-4xl mx-auto py-8 px-4`}>
         <Head>
           <title>Kodeweich: Blogs</title>
           <OpenGraph properties={ogProperties} />
         </Head>
 
-        <h1 className={`${inter.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
+        <h1 className={`${poppins700.className} text-4xl text-slate-800 sm:text-3xl md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
           Blogs
         </h1>
-        <p className={`${inter.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
+        <p className={`${poppins400.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
           I have been coding for several years and have experience working with a variety of programming languages and frameworks. My goal with this blog is to share my knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
@@ -117,7 +117,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
               <ArticleCard article={article} key={index}/>
             ))}
           </div>
-          <div className={`${inter.className}`}>
+          <div>
             <SearchInput value={searchValue} onSearch={onSearch} onSubmit={onSubmit}/>
             <ArticleWidget/>
             <Category categories={categories}/>

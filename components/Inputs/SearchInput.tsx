@@ -1,10 +1,11 @@
 
 import {ISearchInput} from '../../interfaces'
+import { poppins400, poppins600 } from '../utils'
 
 const SearchInput = ({value, onSearch, onSubmit}: ISearchInput) => {
     return (
-        <div className={`p-6 mb-8 rounded-lg border-2 border-y-slate-300 border-x-pink-500 dark:border-y-slate-500`}>
-            <h3 className={`text-medium sm:text-2xl font-bold w-full text-slate-800 dark:text-slate-300 pb-4`}>Search</h3>
+        <div className={`${poppins400.className} p-6 mb-8 rounded-lg border-2 border-y-slate-300 border-x-pink-500 dark:border-y-slate-500`}>
+            <h3 className={`${poppins600.className} text-medium sm:text-2xl font-bold w-full text-slate-800 dark:text-slate-300 pb-4`}>Search</h3>
             <form onSubmit={onSubmit}>   
                 <div className="relative">
                     <input 

@@ -4,7 +4,7 @@ import { Key, useEffect, useState } from 'react';
 import {GetStaticPaths, GetStaticProps} from 'next'
 
 import { NextPageWithLayout } from '../../page';
-import { inter } from '../../../components/utils';
+import { poppins400, poppins700 } from '../../../components/utils';
 import { usePageLoading } from '../../../lib/hooks';
 import { titleCaseSlug } from '../../../lib/helper';
 import { IArticleBoxCard, IArticleSlugPage } from '../../../interfaces';
@@ -111,23 +111,21 @@ const CategoryPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, ca
   }
 
   return (
-    <section className={`${inter.className} max-w-4xl mx-auto py-8 px-4`}>
+    <section className={`${poppins400.className} max-w-4xl mx-auto py-8 px-4`}>
         <Head>
           <title>{`${titleCaseSlug(slug)} : Kodeweich`}</title>
         </Head>
 
-        <h1 className={`${inter.className} capitalize text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
+        <h1 className={`${poppins700.className} my-2 mb-8 capitalize text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300`}>
           {titleCaseSlug(slug)}
         </h1>
-        <p className={`${inter.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
-        </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>
             {articlesList && articlesList.map((article: IArticleBoxCard, index: Key) => (
               <ArticleCard article={article} key={index}/>
             ))}
           </div>
-          <div className={`${inter.className}`}>
+          <div>
             <SearchInput value={searchValue} onSearch={onSearch} onSubmit={onSubmit}/>
             <ArticleWidget/>
             <Category categories={categories}/>

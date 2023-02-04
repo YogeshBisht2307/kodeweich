@@ -1,10 +1,11 @@
 import Link from "next/link";
 import {ITags} from '../../interfaces'
+import { poppins400, poppins600 } from "../utils";
 
 const Tags: React.FC<ITags> = ({tags}) => {
   return (
-    <div className={`p-6 mb-8 rounded-lg border-2 border-y-slate-300 border-x-pink-500 dark:border-y-slate-500`}>
-        <h3 className={`text-medium sm:text-2xl font-bold w-full text-slate-800 dark:text-slate-300 pb-4`}>
+    <div className={`${poppins400.className} p-6 mb-8 rounded-lg border-2 border-y-slate-300 border-x-pink-500 dark:border-y-slate-500`}>
+        <h3 className={`${poppins600.className} text-medium sm:text-2xl font-bold w-full text-slate-800 dark:text-slate-300 pb-4`}>
           Popular Tags
         </h3>
         <div className={`flex justify-start flex-wrap`}>

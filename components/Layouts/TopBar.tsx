@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Inter } from '@next/font/google';
 import Link from "next/link";
 import Image from "next/image";
 import companyLogo from '../../assets/images/logo.png';
 import compnayLogoDark from '../../assets/images/logodark.png'
 import { ITopBar } from '../../interfaces';
-
-const inter = Inter({ subsets: ['latin'] })
+import { poppins400 } from '../utils';
 
 const TopBar: React.FC<ITopBar> = () => {
     const [theme, setTheme] = useState("dark")
@@ -28,45 +26,26 @@ const TopBar: React.FC<ITopBar> = () => {
     }, [])
 
     return (
-        <header className={'max-w-4xl mx-auto px-4 py-4'}>
+        <header className={`${poppins400.className} max-w-4xl mx-auto px-4 py-4`}>
             <nav className={'flex flex-row items-center justify-between'}>
                 <div className='w-[45px] sm:w-[50px] transform hover:scale-[1.1] transition-all'>
                     <Link href='/'><Image src={theme == 'light' ? companyLogo : compnayLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
                 </div>
                 <ul className={'flex flex-row md:space-x-8'}>
                     <li>
-                        <Link className={`
-                            ${inter.className}
-                            dark:text-slate-300
-                            text-slate-800
-                            font-medium
-                            text-sm
-                            dark:hover:bg-slate-800
-                            hover:bg-slate-200
-                            rounded
-                            transform hover:scale-[1.05]
-                            transition-all
-                            py-1 px-2 sm:px-4
-                        `} href="/about">ABOUT</Link>
+                        <Link 
+                            className={`dark:text-slate-300 text-slate-800 font-medium text-sm dark:hover:bg-slate-800 hover:bg-slate-200 rounded transform hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
+                            href="/about">ABOUT
+                        </Link>
                     </li>
                     <li>
-                        <Link className={`
-                            ${inter.className}
-                            dark:text-slate-300
-                            text-slate-800
-                            font-medium
-                            text-sm
-                            sm:text-sm
-                            dark:hover:bg-slate-800
-                            hover:bg-slate-200
-                            rounded
-                            transform hover:scale-[1.05]
-                            transition-all
-                            py-1 px-2 sm:px-4
-                        `} href="/connect">CONNECT</Link>
+                        <Link 
+                            className={`dark:text-slate-300 text-slate-800 font-medium text-sm dark:hover:bg-slate-800 hover:bg-slate-200 rounded transform hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
+                            href="/connect">CONNECT
+                        </Link>
                     </li>
                 </ul>
-                <div className={`${inter.className} flex flex-row justify-around space-x-2 md:space-x-4`}>
+                <div className={`flex flex-row justify-around space-x-2 md:space-x-4`}>
                     <button
                         id="theme-toggle"
                         type="button"
@@ -106,21 +85,7 @@ const TopBar: React.FC<ITopBar> = () => {
                         }
                     </button>
                     <Link 
-                        className={
-                            `${inter.className}
-                            rounded-md 
-                            dark:bg-slate-300 
-                            bg-slate-800
-                            text-xs
-                            sm:text-sm
-                            font-sm
-                            sm:font-medium
-                            dark:text-slate-800
-                            text-slate-200
-                            transform hover:scale-[1.03]
-                            transition-all
-                            sm:py-2 sm:px-6 px-3 pt-2.5
-                        `}
+                        className={`rounded-md dark:bg-slate-300 bg-slate-800 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
                         href="/blogs"
                     >Blog</Link>
                 </div>

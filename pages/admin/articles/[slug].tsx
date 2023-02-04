@@ -6,7 +6,7 @@ import Router, { useRouter } from 'next/router';
 
 import { NextPageWithLayout } from '../../page';
 import { authUser } from '../../../lib/SSContext';
-import { inter } from '../../../components/utils';
+import { poppins400, poppins700 } from '../../../components/utils';
 import { usePageLoading } from '../../../lib/hooks';
 import { IUpdateArticlePage } from '../../../interfaces';
 import { getArticleBySlugForAdmin } from '../../../middleware/articles';
@@ -136,11 +136,11 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
     }
 
     return (
-      <div className='max-w-4xl px-4 mx-auto'>
-        <h1 className={`${inter.className} my-8 text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>
+      <section className={`${poppins400.className}  max-w-4xl px-4 mx-auto`}>
+        <h1 className={`${poppins700.className} my-8 text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>
           Update Article
         </h1>
-        <ul className={`${inter.className} list-disc sm:mb-8 ml-4 mb-4`}>
+        <ul className={`list-disc sm:mb-8 ml-4 mb-4`}>
           <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500`}>Use a clear and engaging writing style. Write in a way that is easy to understand, while also using descriptive language to bring your ideas to life</li>
           <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500`}>Use short paragraphs and subheadings to break up the text and make it easy to read.</li>
           <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500`}>Write a strong headline that accurately reflects the content of the article and grabs the reader&apos;s attention.</li>
@@ -208,14 +208,14 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
               onChange={handleQuillOnchange}
           />
           <input
-            className={`${inter.className} mr-4 py-2 cursor-pointer rounded-md bg-slate-800 dark:bg-slate-300 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
+            className={`${poppins400.className} mr-4 py-2 cursor-pointer rounded-md bg-slate-800 dark:bg-slate-300 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
             disabled={!content || !articleInfo.title} type="submit" value="Update"
           />
           <a className="back" href="#" onClick={() => Router.push('/admin/articles')}>
             Cancel
           </a>
         </form>
-      </div>
+      </section>
     );
 };
 

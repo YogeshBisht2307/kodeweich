@@ -3,6 +3,7 @@ import Router from "next/router";
 import toast from 'react-hot-toast';
 import { useAuth, usePageLoading } from '../../lib/hooks';
 import ScreenLoader from '../../components/ScreenLoader';
+import { poppins400, poppins700 } from '../../components/utils';
 
 const Login = () => {
     const [uEmail, setEmail] = useState("");
@@ -40,11 +41,11 @@ const Login = () => {
         }
     };
   return (
-    <section className="bg-slate-900">
+    <section className={`${poppins400.className} bg-slate-900`}>
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-sm xl:p-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 className="text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl dark:text-white">
+                    <h1 className={`${poppins700.className} text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl dark:text-white`}>
                         Sign in to your account
                     </h1>
                     <form onSubmit={signinHandler} className="space-y-4 md:space-y-6" action="#">

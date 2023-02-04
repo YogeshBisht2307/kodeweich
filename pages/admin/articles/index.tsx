@@ -6,7 +6,7 @@ import { GetStaticProps } from 'next';
 import React, { useState, useEffect } from 'react';
 
 import { NextPageWithLayout } from '../../page';
-import { inter } from '../../../components/utils';
+import { poppins400, poppins700 } from '../../../components/utils';
 import { IAdminArticlePage } from '../../../interfaces'
 import { useAuth, usePageLoading } from '../../../lib/hooks';
 import { getArticlesForAdmin } from '../../../middleware/articles';
@@ -49,15 +49,15 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
     }
 
     return (
-      <div className='max-w-4xl px-4 mx-auto'>
+      <section className={`${poppins400.className} max-w-4xl px-4 mx-auto`}>
         {selected !== "" && <DeleteModal selected={selected} setSelected={setSelected}/>}
-        <h1 className={`${inter.className} my-8 text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>
+        <h1 className={`${poppins700.className} my-8 text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl dark:text-slate-300 mb-4`}>
           Articles
         </h1>
         <div className='flex justify-between'>
           <div></div>
           <Link 
-            className={`${inter.className} rounded-md dark:bg-slate-300 bg-slate-800 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
+            className={`rounded-md dark:bg-slate-300 bg-slate-800 text-xs sm:text-sm font-sm sm:font-medium dark:text-slate-800 text-slate-200 transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
             href="/admin/articles/create"
           >
             Create
@@ -109,7 +109,7 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
                 </tbody>
             </table>
         </div>
-      </div>
+      </section>
     );
 };
 
