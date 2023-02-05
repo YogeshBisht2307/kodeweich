@@ -112,7 +112,7 @@ const SlugPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, catego
         <title>{`${titleCaseSlug(slug)} : Kodeweich`}</title>
       </Head>
 
-      <h1 className={`${poppins700.className} my-2 capitalize text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
+      <h1 className={`${poppins700.className} my-2 capitalize text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-8`}>
         {titleCaseSlug(slug)}
       </h1>
       <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>

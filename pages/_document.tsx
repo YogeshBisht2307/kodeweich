@@ -7,7 +7,7 @@ export default function Document() {
       <Head>
         <Seo/>
       </Head>
-      <body className='bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-white'>
+      <body className='text-gray-900 bg-gray-100 dark:bg-gray-900 dark:text-gray-100'>
         <Main />
         <NextScript />
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js" async></script>

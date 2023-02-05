@@ -8,7 +8,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
 
     if (req.method === 'PUT'){
-        const { title, content, featuredImage, description, published, categories, tags } = req.body;
+        const { title, content, featuredImage, featuredPost, description, published, categories, tags } = req.body;
 
         const connectCategory = categories.map((slug: string) => {
             return {slug: slug}
@@ -27,6 +27,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     content: content,
                     featuredImage: featuredImage,
                     description: description,
+                    featuredPost: featuredPost,
                     slug: slug,
                     published: published,
                     updatedAt: Date.now(),

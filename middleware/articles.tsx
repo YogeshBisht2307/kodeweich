@@ -21,6 +21,31 @@ export const getArticleBySlug = async(slug: string) => {
     }};
 }
 
+export const getFeaturedArticles = async() => {
+    const response = await prisma.articles.findMany({
+        take: 3,
+        where: { published: true, featuredPost: true },
+        select: {
+          title: true,
+          slug: true,
+          description: true,
+          createdAt: true,
+          updatedAt: true,
+          author: {select: { name: true }},
+        }
+    });
+
+    if(!response){
+        return [];
+    }
+
+    response.forEach(function(article: any) {
+        article.updatedAt = parseInt(article.updatedAt.toString())
+        article.createdAt = parseInt(article.createdAt.toString())
+    })
+    return response
+}
+
 export const getArticles = async() => {
     const response = await prisma.articles.findMany({
         where: { published: true },

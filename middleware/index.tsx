@@ -2,7 +2,8 @@ export {
     getArticlesSlug,
     getArticleBySlug,
     getArticles,
-    getArticlesByCategory
+    getArticlesByCategory,
+    getFeaturedArticles
 } from "./articles";
 
 export {

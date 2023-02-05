@@ -91,7 +91,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
       alt: "Kodeweich Logo",
     },
     description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",
-    type: "website",
+    type: "website"
   });
 
   if(isPageLoading){

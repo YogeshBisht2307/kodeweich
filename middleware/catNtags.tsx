@@ -8,7 +8,7 @@ export const getCategories = async () => {
 
 export const getTags = async() => {
     return await prisma.tags.findMany({
-        take: 10, select: {title: true, slug: true}
+        take: 15, select: {title: true, slug: true}
     });
 }
 

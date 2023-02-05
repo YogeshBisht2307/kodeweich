@@ -3,7 +3,7 @@ import prisma from '../../../lib/prisma';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if(req.method === 'POST'){
-    const { title, slug, content, featuredImage, description, published, categories, tags, userEmail } = req.body;
+    const { title, slug, content, featuredImage, featuredPost, description, published, categories, tags, userEmail } = req.body;
 
     const connectCategory = categories.map((slug: string) => {
         return {slug: slug}
@@ -19,13 +19,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           content: content,
           featuredImage: featuredImage,
           description: description,
+          featuredPost: featuredPost,
           slug: slug,
           createdAt: Date.now(),
           updatedAt: Date.now(),
           published: published,
           author: { connect: { email: userEmail } },
           categories: {connect: connectCategory},
-          tags: {connect: connectTags}},
+          tags: {connect: connectTags}}
       });
       return res.status(200).json({});
     }catch(error){
@@ -40,7 +41,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
     try{
       const result = await prisma.articles.findMany({
-        take: 5,
+        take: 3,
         orderBy: {
             createdAt: 'desc',
         },

@@ -29,7 +29,7 @@ const About: NextPageWithLayout = () => {
           About
         </h1>
         <p className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
-          The blog is created and maintained by Yogesh Bisht, a Full Stack developer with 2 years of experience in building robust and scalable applications using Python and ReactJS. Managing cloud server and serverless applications on AWS and Google Cloud using No-code and manual tools.
+          The blog is created and maintained by Yogesh Bisht, a Full Stack developer with experience in building robust and scalable applications using Python and Javascript. Managing cloud server and serverless applications on AWS and Google Cloud using No-code and manual tools.
         </p>
         <div className={`max-w-4xl`}>
           <div>
@@ -42,9 +42,9 @@ const About: NextPageWithLayout = () => {
           <div>
             <h3 className={`${poppins700.className} text-xl sm:text-2xl text-slate-800 font-bold dark:text-slate-300 mb-4`}>Content Overview</h3>
             <ul className={`list-disc list-inside`}>
-              <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 my-1`}>Tutorials on various programming languages and frameworks.</li>
+              <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 my-1`}>Tutorials on various programming languages, cloud technologies, devops and frameworks.</li>
               <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 my-1`}>Tips and tricks for improving coding skills and efficiency.</li>
-              <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 my-1`}>In-depth articles on coding-related topics such as best practices, design patterns, and software architecture.</li>
+              <li className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 my-1`}>In-depth articles on coding-related topics such as best practices, design patterns, cloud architecture, and software architecture.</li>
             </ul>
           </div>
         </div>

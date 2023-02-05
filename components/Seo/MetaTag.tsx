@@ -7,7 +7,9 @@ const MetaTag = (): JSX.Element => {
             <meta name="application-name" content="Kodeweich"/>
             <meta name="msapplication-TileColor" content="#ffc40d"/>
             <meta name="theme-color" content="#ffffff"/>
-            {/* x-robots-tag: noindex */}
+
+            {/* # only for dev environment */}
+            {process.env.NEXT_PUBLIC_STAGE === 'dev' && <meta name="robots" content="none" />}
         </>
     );
 }

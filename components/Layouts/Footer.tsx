@@ -18,7 +18,7 @@ const Footer: React.FC<IFooter> = () => {
                     <Link href="https://www.instagram.com/yogesh_bisht_99/" target={"_blank"} className={`max-w-xl font-sm md:text-md text-slate-500 hover:text-slate-600 transition py-1`}>Instagram</Link>
                 </div>
                 <div className='flex flex-col self-start w-full'>
-                    <Link href={`/admin/privacyPolicy`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-slate-500 hover:text-slate-600 transition py-1`}>Privacy Policy</Link>
+                    <Link href={`/privacyPolicy`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-slate-500 hover:text-slate-600 transition py-1`}>Privacy Policy</Link>
                     <Link href={`/admin/login`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-slate-500 hover:text-slate-600 transition md:flex hidden py-1`}>Manage Blog</Link>
                 </div>
             </div>

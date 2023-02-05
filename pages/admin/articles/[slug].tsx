@@ -71,7 +71,8 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
       slug: article.slug,
       description: article.description,
       featuredImage: article.featuredImage,
-      published: article.published === true ? true : false
+      published: article.published === true ? true : false,
+      featuredPost: article.featuredPost === true ? true: false
     }
 
     const router = useRouter();
@@ -201,6 +202,23 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
               <div className="ml-2 text-sm">
                   <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-slate-400">Mark Article for Publish...</label>
                   <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-slate-400">Make sure you have written a understandable article.</p>
+              </div>
+          </div>
+
+          <div className="flex py-4">
+              <div className="flex items-center h-5">
+                  <input
+                    id="helper-featured-post"
+                    aria-describedby="helper-feature-post"
+                    type="checkbox"
+                    checked={articleInfo.featuredPost}
+                    onChange={() => setArticleInfo({...articleInfo, featuredPost: !articleInfo.featuredPost})}
+                    className="w-4 h-4 border-gray-300 rounded-md outline-none dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                  />
+              </div>
+              <div className="ml-2 text-sm">
+                  <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-slate-400">Mark Article as Feature Post...</label>
+                  <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-slate-400">Make sure this article is one of the best of yours.</p>
               </div>
           </div>
           <QuillNoSSRWrapper

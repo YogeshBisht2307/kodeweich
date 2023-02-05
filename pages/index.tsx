@@ -7,23 +7,44 @@ import BaseLayout from '../components/Layouts/BaseLayout';
 import TopBar from '../components/Layouts/TopBar';
 import HeroImage from '../assets/images/hero.png'
 import Footer from '../components/Layouts/Footer';
-import BoxCard from '../components/Cards/BoxCard';
+import FeatureArticleCard from '../components/Cards/FeatureArticleCard';
 import { useOpenGraph, usePageLoading } from '../lib/hooks';
 import { absUrl } from '../lib/helper';
 import OpenGraph from '../components/Seo/OpenGraph';
 import { poppins400, poppins700 } from '../components/utils';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { getFeaturedArticles } from '../middleware';
+import { IArticle } from '../interfaces';
+import { Key } from 'react';
 const ScreenLoader = dynamic(() => import('../components/ScreenLoader'), { ssr: false });
 
 
-const Home: NextPageWithLayout = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  try{
+    const articleResponse = getFeaturedArticles();    
+    const articles = await articleResponse;
+
+    if(!articles){
+      return{
+        props: {},
+        revalidate: 60
+      }
+    }
+
+    return {
+      props: { articles },
+      revalidate: 60
+    };
+  }catch(error){
+    return {
+      props: {},
+      revalidate: 60
+    };
+  }
+};
+
+const Home: NextPageWithLayout = ({ articles }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { isPageLoading } = usePageLoading();
-
-  const featurePost = [
-    {"title": "Postgresql Master-Slave Replication Setup On EC2", "description": "The master-slave database replication is a process of copying (syncing) data from a database on one server (the master) to a database on another server (the slaves) ...", "url": "https://www.linkedin.com/pulse/postgresql-master-slave-replication-setup-ec2-yogesh-bisht/"},
-    {"title": "Introduction to Cloud PubSub and Use Case Scenario", "description": "Cloud Pub/Sub may be an easy topic from the coding point of view but implementing a system that can fully utilize its functionality may come across as a problem ...", "url": "https://www.linkedin.com/pulse/introduction-cloud-pubsub-use-case-scenario-yogesh-bisht/"},
-    {"title": "Automate Django Project Setup Using Bash Script", "description": "In this article, we are going to learn about some fantastic stuff that will reduce your overhead with setting up a Django application or any other python application...", "url": "https://code-material.blogspot.com/which-is-the-best-module-bundler-webpack-rollup-parcel"}
-  ]
-
   const ogProperties = useOpenGraph({
     url: absUrl("/"),
     title: "Kodeweich",
@@ -60,9 +81,9 @@ const Home: NextPageWithLayout = () => {
       </div>
 
       <div className='flex flex-col items-center justify-between py-12 my-4 md:flex-row md:space-x-8'>
-          {
-            featurePost.map((post, index) => (
-              <BoxCard post={post} key={index}/>
+          { articles &&
+            articles.map((article: IArticle , index: Key) => (
+              <FeatureArticleCard article={article} key={index}/>
             ))
           }
       </div>

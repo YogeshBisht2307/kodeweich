@@ -21,7 +21,8 @@ const CreateArticle: NextPageWithLayout = () => {
       slug: "",
       description: "",
       featuredImage: "",
-      published: false
+      published: false,
+      featuredPost: false,
     }
 
     const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
@@ -150,8 +151,8 @@ const CreateArticle: NextPageWithLayout = () => {
           <div className="flex py-4">
               <div className="flex items-center h-5">
                   <input
-                    id="helper-checkbox"
-                    aria-describedby="helper-checkbox-text"
+                    id="helper-publish"
+                    aria-describedby="helper-publish"
                     type="checkbox"
                     checked={articleInfo.published}
                     onChange={() => setArticleInfo({...articleInfo, published: !articleInfo.published})}
@@ -161,6 +162,22 @@ const CreateArticle: NextPageWithLayout = () => {
               <div className="ml-2 text-sm">
                   <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-slate-400">Mark Article for Publish...</label>
                   <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-slate-400">Make sure you have written a understandable article.</p>
+              </div>
+          </div>
+          <div className="flex py-4">
+              <div className="flex items-center h-5">
+                  <input
+                    id="helper-featured-post"
+                    aria-describedby="helper-feature-post"
+                    type="checkbox"
+                    checked={articleInfo.featuredPost}
+                    onChange={() => setArticleInfo({...articleInfo, featuredPost: !articleInfo.featuredPost})}
+                    className="w-4 h-4 border-gray-300 rounded-md outline-none dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                  />
+              </div>
+              <div className="ml-2 text-sm">
+                  <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-slate-400">Mark Article as Feature Post...</label>
+                  <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-slate-400">Make sure this article is one of the best of yours.</p>
               </div>
           </div>
           <QuillNoSSRWrapper
