@@ -1,4 +1,4 @@
-@import "//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/railscasts.min.css";
+@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css";
 @tailwind base;
 
 :root {
@@ -110,6 +110,10 @@ a {
 
 .article-detail li, .privacy-policy li{
   margin: 0.4rem 0rem;
+}
+
+.article-detail img{
+  width: 100%;
 }
 
 @media(min-width: 968px){

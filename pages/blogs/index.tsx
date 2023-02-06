@@ -109,7 +109,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
           Blogs
         </h1>
         <p className={`${poppins400.className} font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
-          I have been coding for several years and have experience working with a variety of programming languages and frameworks. My goal with this blog is to share my knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
+        Hi there! This is a platform for developers and technology enthusiasts who are interested in exploring and learning about the latest trends and advancements in cloud computing, DevOps, and programming languages. This blog is to share knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
         </p>
         <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-4`}>
           <div className={`col-span-2`}>

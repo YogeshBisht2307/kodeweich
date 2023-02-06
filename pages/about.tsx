@@ -28,9 +28,10 @@ const About: NextPageWithLayout = () => {
         <h1 className={`${poppins700.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>
           About
         </h1>
-        <p className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500 lg:mb-8 mb-6`}>
+        <p className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500`}>
           The blog is created and maintained by Yogesh Bisht, a Full Stack developer with experience in building robust and scalable applications using Python and Javascript. Managing cloud server and serverless applications on AWS and Google Cloud using No-code and manual tools.
         </p>
+        <p className='py-2 my-1 mb-6 lg:mb-8 font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500'>At our blog, we strive to provide an engaging and informative experience for all of our readers. We welcome feedback and suggestions and are always open to hearing from our community. If you have an idea for an article or would like to contribute your own content, please don't hesitate to get in touch with us.</p>
         <div className={`max-w-4xl`}>
           <div>
             <h3 className={`${poppins700.className} text-xl sm:text-2xl text-slate-800 font-bold dark:text-slate-300 mb-4`}>Mission and Goals</h3>
