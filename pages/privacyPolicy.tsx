@@ -36,7 +36,7 @@ const Home: NextPageWithLayout = () => {
       <Head>
         <OpenGraph properties={ogProperties} />
       </Head>
-      <div>
+      <div className={`font-med text-slate-600 md:text-md lg:text-md dark:text-slate-500`}>
         <h1 className={`${poppins700.className} text-4xl text-slate-800 sm:text-3xl font-extrabold md:text-4xl xl:text-5xl dark:text-slate-300 mb-4`}>Privacy Policy</h1>
         <p className={`py-4`}>Last updated: February 05, 2023</p>
         <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
