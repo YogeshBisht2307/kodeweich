@@ -87,7 +87,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
     title: "Kodeweich",
     image: {
       type: "image/jpeg",
-      url: "/assets/images/ogImage.jpg",
+      url: "/assets/images/kodeweich-banner.jpg",
       alt: "Kodeweich Logo",
     },
     description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",

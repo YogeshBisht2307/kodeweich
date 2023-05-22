@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from "next/link";
 import Image from "next/image";
-import companyLogo from '../../assets/images/logo.png';
-import compnayLogoDark from '../../assets/images/logodark.png'
+import companyLogo from '../../assets/images/logodark.png';
 import { ITopBar } from '../../interfaces';
 import { poppins400 } from '../utils';
 
@@ -28,8 +27,8 @@ const TopBar: React.FC<ITopBar> = () => {
     return (
         <header className={`${poppins400.className} max-w-4xl mx-auto px-4 py-4`}>
             <nav className={'flex flex-row items-center justify-between'}>
-                <div className='w-[45px] sm:w-[50px] transform hover:scale-[1.1] transition-all'>
-                    <Link href='/'><Image src={theme == 'light' ? companyLogo : compnayLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
+                <div className='w-[55px] sm:w-[60px] transform hover:scale-[1.1] transition-all bg-slate-800 py-3 px-1 rounded-full'>
+                    <Link href='/'><Image src={companyLogo} height={45} alt={"Kodeweich Logo"}/></Link>
                 </div>
                 <ul className={'flex flex-row md:space-x-8'}>
                     <li>

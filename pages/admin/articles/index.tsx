@@ -85,7 +85,7 @@ const Articles: NextPageWithLayout<IAdminArticlePage> = ({articles}) => {
                     {articles && articles.length > 0 ? articles.map((article, index) => (
                       <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td className="px-4 py-4 whitespace-nowrap">
-                            <Link href={`/admin/articles/${article.slug}`}>{article.title}</Link>
+                            <Link href={`/admin/articles/${article.slug}/preview`}>{article.title}</Link>
                         </td>
                         <td className="px-4 py-4">
                             {article.author.name}

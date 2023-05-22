@@ -50,13 +50,14 @@ const Login = () => {
                     </h1>
                     <form onSubmit={signinHandler} className="space-y-4 md:space-y-6" action="#">
                         <div>
-                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Your email</label>
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Email</label>
                             <input 
                                 value={uEmail}
                                 onChange={(e)=> setEmail(e.target.value)}
                                 type="email"
                                 name="email" id="email" 
-                                className="bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com"/>
+                                className="bg-slate-50 border border-slate-300 text-slate-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="email@gmail.com"/>
                         </div>
                         <div>
                             <label htmlFor="password" className="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Password</label>

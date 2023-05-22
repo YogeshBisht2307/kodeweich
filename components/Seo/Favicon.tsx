@@ -2,8 +2,7 @@ const Favicon = (): JSX.Element => {
     return (
         <>
             <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"/>
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
+            <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico"/>
             <link rel="manifest" href="/favicon/site.webmanifest"></link>
             <meta name="apple-mobile-web-app-title" content="Kodeweich"/>
             <meta name="application-name" content="Kodeweich"/>

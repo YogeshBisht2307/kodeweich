@@ -4,18 +4,18 @@ import React, { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Router, { useRouter } from 'next/router';
 
-import { NextPageWithLayout } from '../../page';
-import { authUser } from '../../../lib/SSContext';
-import { poppins400, poppins700 } from '../../../components/utils';
-import { usePageLoading } from '../../../lib/hooks';
-import { IUpdateArticlePage } from '../../../interfaces';
-import { getArticleBySlugForAdmin } from '../../../middleware/articles';
+import { NextPageWithLayout } from '../../../page';
+import { authUser } from '../../../../lib/SSContext';
+import { poppins400, poppins700 } from '../../../../components/utils';
+import { usePageLoading } from '../../../../lib/hooks';
+import { IUpdateArticlePage } from '../../../../interfaces';
+import { getArticleBySlugForAdmin } from '../../../../middleware/articles';
 
-import TopBar from '../../../components/Layouts/TopBar';
-import Footer from '../../../components/Layouts/Footer';
-import ScreenLoader from '../../../components/ScreenLoader';
-import BaseLayout from '../../../components/Layouts/BaseLayout';
-import QuillNoSSRWrapper from '../../../components/RichText';
+import TopBar from '../../../../components/Layouts/TopBar';
+import Footer from '../../../../components/Layouts/Footer';
+import ScreenLoader from '../../../../components/ScreenLoader';
+import BaseLayout from '../../../../components/Layouts/BaseLayout';
+import QuillNoSSRWrapper from '../../../../components/RichText';
 
 import 'react-quill/dist/quill.snow.css';
 
@@ -76,6 +76,7 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
     }
 
     const router = useRouter();
+    const [isUpdating, setUpdating] = useState(false);
     const { isPageLoading } = usePageLoading();
     const [editor, setEditor] = useState<any>(null);
     const [newTags, setTags] = useState<string>(tags.toString());
@@ -109,6 +110,7 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
 
     const submitData = async (e: React.SyntheticEvent) => {
       e.preventDefault();
+      setUpdating(true);
       const updatedContent = editor ? modifyContent() : content;
 
       try {
@@ -130,9 +132,14 @@ const UpdateArticle: NextPageWithLayout<IUpdateArticlePage> = ({article, categor
       } catch (error) {
         toast.error("Unable to update article", {duration: 5000});
       }
+      setUpdating(false);
     };
 
     if(isPageLoading){
+      return <ScreenLoader/>
+    }
+
+    if(isUpdating){
       return <ScreenLoader/>
     }
 
