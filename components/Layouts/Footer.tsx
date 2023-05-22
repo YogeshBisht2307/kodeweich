@@ -5,7 +5,7 @@ import { poppins400 } from '../utils';
 const Footer: React.FC<IFooter> = () => {
     return (
         <footer className={`${poppins400.className} max-w-4xl mx-auto px-4 mt-12 py-4 border-t border-slate-600`}>
-            <div className={'pb-4 pt-2 text-xl font-bold'}>Kodweich</div>
+            <div className={'pb-4 pt-2 text-xl font-bold'}>Kodeweich</div>
             <div className={`flex flex-col sm:flex-row items-center justify-between`}>
                 <div className='flex flex-col self-start w-full'>
                     <Link href="/about" className={`max-w-xl font-sm md:text-md text-slate-500 hover:text-slate-600 transition py-1`}>About</Link>
