@@ -137,9 +137,6 @@ export default SlugPage;
 SlugPage.getLayout = (page) => {
   return (
     <BaseLayout>
-      <Head>
-        <title>Kodeweich: Blogs</title>
-      </Head>
       <TopBar />
       {page}
       <Footer/>

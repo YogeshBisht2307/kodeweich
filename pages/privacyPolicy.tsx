@@ -20,7 +20,7 @@ const Home: NextPageWithLayout = () => {
     title: "Kodeweich: Privacy Policy",
     image: {
       type: "image/jpeg",
-      url: "/assets/images/kodeweich-banner.jpg",
+      url: "/images/kodeweich-banner.jpg",
       alt: "Kodeweich Logo",
     },
     description: "Kodeweich Privacy Policy regarding the consent of being responsible for user data security.",

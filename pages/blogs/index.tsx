@@ -87,7 +87,7 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
     title: "Kodeweich",
     image: {
       type: "image/jpeg",
-      url: "/assets/images/kodeweich-banner.jpg",
+      url: "/images/kodeweich-banner.jpg",
       alt: "Kodeweich Logo",
     },
     description: "Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!",
@@ -101,7 +101,6 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   return (
     <section className={`max-w-4xl mx-auto py-8 px-4`}>
         <Head>
-          <title>Kodeweich: Blogs</title>
           <OpenGraph properties={ogProperties} />
         </Head>
 
@@ -133,6 +132,9 @@ export default Blogs;
 Blogs.getLayout = (page) => {
   return (
     <BaseLayout>
+      <Head>
+        <title>Kodeweich: Blogs</title>
+      </Head>
       <TopBar />
       {page}
       <Footer/>
