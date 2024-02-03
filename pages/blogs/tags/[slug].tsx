@@ -26,22 +26,21 @@ const ArticleWidget = dynamic(import('../../../components/Cards/ArticleWidget'),
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   try{
-    const articleResponse = getArticlesByTag(String(params?.slug))
-    const categoryResponse = getCategories();
-    const tagsResponse = getTags();
-    
-    const articles = await articleResponse;
-    const categories = await categoryResponse;
-    const tags = await tagsResponse;
-    
-    if(!articles){
+    const slug = String(params?.slug);
+    const [articles, categories, tags] = await Promise.all([
+      getArticlesByTag(slug),
+      getCategories(),
+      getTags(),
+    ]);
+
+    if (!articles) {
       return {
         notFound: true,
       };
     }
     
     return {
-      props: {slug: params?.slug, articles, categories, tags},
+      props: {slug: slug, articles, categories, tags},
     };
   }
   catch(error){
@@ -53,13 +52,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
 export const getStaticPaths: GetStaticPaths = async() => {
   try{
-    const response = await getTagsSlug();
+    const tags = await getTagsSlug();
+    const paths = tags.map((slug: string) => ({
+      params: { slug },
+    }));
+
     return {
-      paths: response.map((slug: string) => ({
-        params: {slug}
-      })),
+      paths,
       fallback: true,
-    }
+    };
   }catch(error){
     return {
       paths: [],
@@ -77,29 +78,28 @@ const SlugPage: NextPageWithLayout<IArticleSlugPage> = ({ slug, articles, catego
     setArticleList(articles);
   }, [slug, articles])
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchValue(event.target.value)
-    if (searchValue !== ""){
-      const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
-      })
-      setArticleList(filteredData)
-    }else{
-      setArticleList(articles)
+  const filterArticles = (value: string) => {
+    if (value !== '') {
+      const filteredData = articles.filter((article: IArticleBoxCard) =>
+        Object.values(article).join('').toLowerCase().includes(value.toLowerCase())
+      );
+      setArticleList(filteredData);
+    } else {
+      setArticleList(articles);
     }
+  };
+
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
+    const { value } = event.target
+    setSearchValue(value)
+    filterArticles(value)
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSearchValue(event.currentTarget.search.value);
-    if (searchValue !== ""){
-      const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase())
-      })
-      setArticleList(filteredData);
-    }else{
-      setArticleList(articles);
-    }
+    const { value } = event.currentTarget.search
+    setSearchValue(value);
+    filterArticles(value);
   }
 
   if(isPageLoading){

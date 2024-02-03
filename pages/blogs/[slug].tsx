@@ -24,16 +24,16 @@ const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'), { 
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
     try{
-        const articleResponse = getArticleBySlug(String(params?.slug));
-        const categoryResponse = getCategories();
-        const tagsResponse = getTags();
-        
-        const article = await articleResponse;
-        const categories = await categoryResponse;
-        const tags = await tagsResponse;
+        const slug = String(params?.slug);
+        const [article, categories, tags] = await Promise.all([
+            getArticleBySlug(slug),
+            getCategories(),
+            getTags()
+        ]);
+
         return {
-            props: {article, categories, tags},
-            revalidate: 60, 
+            props: { article, categories, tags },
+            revalidate: 60
         };
     }catch(error){
         return {
@@ -44,13 +44,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
 export const getStaticPaths: GetStaticPaths = async() => {
     try{
-        const response = await getArticlesSlug();
+        const slugs = await getArticlesSlug();
+        const paths = slugs.map((slug: string) => ({
+            params: { slug },
+        }));
+
         return {
-            paths: response.map((slug: string) => ({
-                params: {slug}
-            })),
-            fallback: true,
-        }
+            paths,
+            fallback: true
+        };
     }catch(error){
         return{
             paths: [],
@@ -60,39 +62,36 @@ export const getStaticPaths: GetStaticPaths = async() => {
 }
 
 const ArticleDetailPage: NextPageWithLayout<IArticleDefailtPage> = ({article, categories, tags}: InferGetStaticPropsType<typeof getStaticProps>) => {
-    var openGraphData = null;
-    if(!article){
-        openGraphData = {
-            url: "",
-            title: "",
-            image: {type: "image/jpeg", url: "", alt: ""},
-            description: "",
-            type: "article",
-            author: "",
-            section: ""
-        }
-    }else{
-        openGraphData = {
-            url: absUrl(`/blogs/${article.slug}`),
-            title: article.title,
-            image: {
-                type: "image/jpeg",
-                url: article.featuredImage,
-                alt: article.title,
-            },
-            description: article.description,
-            type: "article",
-            author: article.author.name,
-            section: String(categories[0].title),
-            modified_time: new Date(Number(article.updatedAt)).toDateString(),
-            published_time: new Date(Number(article.createdAt)).toDateString()
-        }
-    }
+    const openGraphData = article
+    ? {
+        url: absUrl(`/blogs/${article.slug}`),
+        title: article.title,
+        image: {
+          type: 'image/jpeg',
+          url: article.featuredImage,
+          alt: article.title,
+        },
+        description: article.description,
+        type: 'article',
+        author: article.author?.name || '',
+        section: categories[0]?.title || '',
+        modified_time: new Date(Number(article.updatedAt)).toDateString(),
+        published_time: new Date(Number(article.createdAt)).toDateString(),
+      }
+    : {
+        url: '',
+        title: '',
+        image: { type: 'image/jpeg', url: '', alt: '' },
+        description: '',
+        type: 'article',
+        author: '',
+        section: '',
+      };
 
     const ogProperties = useOpenGraph(openGraphData);
     const { isPageLoading } = usePageLoading();
     if(isPageLoading){
-        return <ScreenLoader/>
+        return <ScreenLoader/>;
     }
 
     return (
