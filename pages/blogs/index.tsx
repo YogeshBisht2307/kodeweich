@@ -26,18 +26,17 @@ const ArticleWidget = dynamic(import('../../components/Cards/ArticleWidget'), { 
 
 export const getStaticProps: GetStaticProps = async () => {
   try{
-    const articleResponse = getArticles();
-    const categoryResponse = getCategories();
-    const tagsResponse = getTags();
-    
-    const articles = await articleResponse;
-    const categories = await categoryResponse;
-    const tags = await tagsResponse;
-    if(!articles){
-      return{
-        props: {},
-        revalidate: 60
-      }
+    const [articles, categories, tags] = await Promise.all([
+      getArticles(),
+      getCategories(),
+      getTags(),
+    ]);
+
+    if (!articles) {
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
     }
 
     return {
@@ -57,29 +56,28 @@ const Blogs: NextPageWithLayout<IBlogPage> = ({ articles, categories, tags }: In
   const [searchValue, setSearchValue] = useState<string>('');
   const { isPageLoading } = usePageLoading();
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchValue(event.target.value);
-    if (searchValue !== ""){
-      const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase());
-      });
+  const filterArticles = (value: string) => {
+    if (value !== '') {
+      const filteredData = articles.filter((article: IArticleBoxCard) =>
+        Object.values(article).join('').toLowerCase().includes(value.toLowerCase())
+      );
       setArticleList(filteredData);
-    }else{
+    } else {
       setArticleList(articles);
     }
+  };
+
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>)=>{
+    const { value } = event.target;
+    setSearchValue(value);
+    filterArticles(value);
   }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSearchValue(event.currentTarget.search.value);
-    if (searchValue !== ""){
-      const filteredData = articles.filter((article: IArticleBoxCard) => {
-        return Object.values(article).join('').toLowerCase().includes(searchValue.toLowerCase());
-      });
-      setArticleList(filteredData);
-    }else{
-      setArticleList(articles);
-    }
+    const { value } = event.currentTarget.search
+    setSearchValue(value);
+    filterArticles(value);
   }
 
   const ogProperties = useOpenGraph({
