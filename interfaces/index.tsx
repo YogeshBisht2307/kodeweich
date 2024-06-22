@@ -1,35 +1,34 @@
-import { Dispatch, SetStateAction } from "react";
+export interface TopBarProps {};
 
-export interface IFooter {}
-export interface ITopBar {}
+export interface FooterProps {};
 
-export interface IBaseLayout {
-    children: React.ReactNode
+
+export interface Author {
+    name: String,
+    id: String
 }
 
-export interface IAuthor{
-    name: string
-}
 
-export interface IArticleBoxCard{
+export interface ArticleWidget {
     title: string;
     slug: string;
     description: string;
-    createdAt: Number;
-    updatedAt: Number;
-    author: IAuthor;
+    createdAt: String;
+    updatedAt: String;
+    author: Author;
 }
 
-export interface IAdminArticleList{
-    id: string;
-    title: string;
-    slug: string;
-    updatedAt: Number;
-    published: boolean;
-    author: IAuthor;
+export interface Category {
+    title: String,
+    slug: String
 }
 
-export interface IArticle{
+export interface Tag {
+    title: String,
+    slug: String
+}
+
+export interface Article {
     id: string;
     title: string;
     slug: string;
@@ -38,74 +37,8 @@ export interface IArticle{
     featuredPost: Boolean;
     content: string;
     published: Boolean;
-    createdAt: Number;
-    updatedAt: Number;
+    createdAt: String;
+    updatedAt: String;
     authorId: string;
-    author: IAuthor;
-}
-
-export interface IArticleCard {
-    article: IArticleBoxCard
-}
-
-export interface IArticleDetail {
-    [key: string]: any;
-}
-
-export interface ICategory{
-    title: true,
-    slug: true,
-}
-
-export interface ICategories{
-    categories: ICategory[]
-}
-
-export interface ITag{
-    title: true,
-    slug: true,
-}
-
-export interface ITags{
-    tags: ITag[]
-}
-
-export interface IArticleDefailtPage{
-    article: IArticle;
-    categories: ICategory[];
-    tags: ITag[];
-}
-
-export interface IBlogPage{
-    articles: IArticleBoxCard[];
-    categories: ICategory[];
-    tags: ITag[];
-}
-
-export interface IArticleSlugPage{
-    articles: IArticleBoxCard[];
-    categories: ICategory[];
-    tags: ITag[];
-    slug: string;
-}
-
-export interface IAdminArticlePage{
-    articles: IAdminArticleList[];
-}
-
-export interface IUpdateArticlePage{
-    article: IArticle;
-    categories: ICategory[];
-    tags: ITag[];
-}
-
-export interface ISearchInput{
-    value: string;
-    onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
-    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
-}
-
-export interface IDeleteArticle{
-    selected: string;
-    setSelected: Dispatch<SetStateAction<string>>;
+    author: Author;
 }
