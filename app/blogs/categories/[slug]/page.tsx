@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import ArticlePage from "../../ArticlePage";
 
 
-export const revalidate = 3600;
+export const revalidate = 30;
 
 
 export default async function Page({ params }: { params: { slug: string } }) {
