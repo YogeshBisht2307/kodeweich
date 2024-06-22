@@ -4,7 +4,7 @@ import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
 import ArticlePage from "./ArticlePage";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
     title: "Kodeweich: Blogs",

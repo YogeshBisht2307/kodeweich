@@ -8,9 +8,9 @@ import { getArticleBySlug, getArticleSeoInfoBySlug } from "@/prisma/queries/arti
 import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
 import ArticleDetail from "./ArticleDetail";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
-export const revalidate = 360;
+export const revalidate = 3600;
 
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
