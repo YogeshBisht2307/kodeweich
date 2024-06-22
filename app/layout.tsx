@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 import "./globals.css";
 import "./highlight.css";
+import GoogleAdsense from "@/utils/GoogleAdsense";
 
 export default function RootLayout({
   children,
@@ -22,6 +23,7 @@ export default function RootLayout({
         {children}
         <Footer />
       </body>
+      <GoogleAdsense pId={process.env.GOOGLE_ADSENSE_PID as string}/>
     </html>
   );
 }
