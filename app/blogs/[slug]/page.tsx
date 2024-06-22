@@ -10,7 +10,7 @@ import { getTags } from "@/prisma/queries/tags";
 import ArticleDetail from "./ArticleDetail";
 import { Metadata } from "next";
 
-export const revalidate = 30;
+export const revalidate = 300;
 
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

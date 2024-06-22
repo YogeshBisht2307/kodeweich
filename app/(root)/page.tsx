@@ -9,7 +9,7 @@ import HeroImage from "@/assets/images/hero.png";
 import FeatureArticleCard from "./FeatureArticles";
 
 
-export const revalidate = 30;
+export const revalidate = 300;
 
 
 export const metadata: Metadata = {
