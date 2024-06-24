@@ -18,6 +18,16 @@ export interface ArticleWidget {
     author: Author;
 }
 
+
+export interface ArticleMinimal {
+    id: String
+    title: string;
+    slug: string;
+    published: boolean
+    updatedAt: String;
+    author: Author;
+}
+
 export interface Category {
     title: String,
     slug: String

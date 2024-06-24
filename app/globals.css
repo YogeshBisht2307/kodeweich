@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -50,6 +49,15 @@
   }
 }
 
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 
 * {
   box-sizing: border-box;
@@ -67,10 +75,11 @@ a {
   text-decoration: none;
 }
 
-.ql-toolbar{
+.ql-toolbar {
   border-radius: 10px 10px 0px 0px !important;
 }
-.ql-container{
+
+.ql-container {
   border-radius: 0px 0px 10px 10px !important;
 }
 
@@ -78,7 +87,7 @@ a {
   height: auto;
 }
 
-.ql-editor{
+.ql-editor {
   min-height: 10rem;
   max-height: 30rem;
   overflow-y: scroll;
@@ -94,64 +103,71 @@ a {
   border-radius: 0.5rem;
 }
 
-.article-detail h2{
+.article-detail h2 {
   font-size: 1.75rem !important;
   padding: 0.15rem 0rem;
 }
 
-.article-detail h3{
+.article-detail h3 {
   font-size: 1.5rem !important;
   padding: 0.15rem 0rem;
 }
 
-.article-detail h4{
+.article-detail h4 {
   font-size: 1.25rem !important;
   padding: 0.15rem 0rem;
 }
 
-.article-detail ul, .privacy-policy ul{
+.article-detail ul,
+.privacy-policy ul {
   list-style-type: disc;
   list-style-position: inside;
 }
 
 
-.article-detail a, .privacy-policy a{
+.article-detail a,
+.privacy-policy a {
   font-weight: 500;
   color: #0303b6;
 }
 
 
-.article-detail a:hover, .privacy-policy a:hover{
+.article-detail a:hover,
+.privacy-policy a:hover {
   text-decoration: underline;
 }
 
-.article-detail li, .privacy-policy li{
+.article-detail li,
+.privacy-policy li {
   margin: 0.4rem 0rem;
 }
 
-.article-detail img{
+.article-detail img {
   width: 100%;
 }
 
-@media(min-width: 968px){
-  .feature-article-card{
+@media(min-width: 968px) {
+  .feature-article-card {
     min-height: 350px;
   }
 }
 
-@media (max-width: 768px){
-  .article-detail pre{
+@media (max-width: 768px) {
+  .article-detail pre {
     max-height: 70vh;
   }
-  .article-detail h2{
+
+  .article-detail h2 {
     font-size: 1.5rem !important;
     padding: 0.15rem 0rem;
   }
-  .article-detail h3{
+
+  .article-detail h3 {
     font-size: 1.35rem !important;
     padding: 0.15rem 0rem;
   }
-  .article-detail h4{
+
+  .article-detail h4 {
     font-size: 1.15rem !important;
     padding: 0.15rem 0rem;
   }

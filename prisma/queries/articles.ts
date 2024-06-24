@@ -217,3 +217,21 @@ export const getRelativeArticlesByFilters = cache(async (slug: String | null): P
         return []
     }
 });
+
+
+export const updatePostStatus = async (
+    id: string,
+    data: { published: boolean }
+) => {
+    return await prisma.articles.update({
+        where: {id: id},
+        data: data,
+    });
+}
+
+
+export const hardDeletePostById = async (id: string) => {
+    return await prisma.articles.delete({
+        where: { id: id }
+    });
+}
