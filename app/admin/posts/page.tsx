@@ -1,16 +1,13 @@
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-import { PostTable } from "./post-table";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { getArticlesForAdmin } from "@/prisma/queries/articles";
+import { PostTable } from "./post-table";
 
 
-export const dynamic = "force-dynamic"
-
+export const dynamic = "force-dynamic";
 
 export default async function Posts() {
     const supabase = createClient();

@@ -1,3 +1,6 @@
+import { CategoryEntity } from "./category";
+import { TagEntity } from "./tag";
+
 export interface AuthorEntity {
     name: String,
     id: String
@@ -58,7 +61,15 @@ export interface ArticleDetailEntity{
     id: string;
     title: string;
     slug: string;
+    description: string;
+    featuredImage: string;
+    featuredPost: Boolean;
+    content: string;
+    published: Boolean;
+    createdAt: BigInt;
     updatedAt: BigInt;
-    published: boolean;
+    authorId: string;
     author: AuthorEntity;
+    tags: TagEntity[];
+    categories: CategoryEntity[]
 }

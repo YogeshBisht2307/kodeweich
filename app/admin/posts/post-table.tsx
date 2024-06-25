@@ -56,7 +56,7 @@ import toast from "react-hot-toast"
 
 
 interface props {
-    articles: ArticleMinimal[]
+  articles: ArticleMinimal[]
 }
 
 export const PostTable = (props: props) => {
@@ -93,14 +93,14 @@ export const PostTable = (props: props) => {
   const columns: ColumnDef<ArticleMinimal>[] = [
     {
       id: "select",
-      header: ({ table }: {table: any}) => (
+      header: ({ table }: { table: any }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
-      cell: ({ row }: {row: any}) => (
+      cell: ({ row }: { row: any }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -119,7 +119,7 @@ export const PostTable = (props: props) => {
     },
     {
       accessorKey: "title",
-      header: ({ column }: { column: any}) => {
+      header: ({ column }: { column: any }) => {
         return (
           <Button
             variant="ghost"
@@ -158,7 +158,7 @@ export const PostTable = (props: props) => {
                 <DropdownMenuItem>
                   <Link
                     className="w-full"
-                    href={`/admin/posts/${post.id}`}>
+                    href={`/admin/posts/${post.id}/edit-post`}>
                     Edit
                   </Link>
                 </DropdownMenuItem>
