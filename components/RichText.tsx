@@ -5,7 +5,9 @@ import { useMemo, useRef } from "react";
 const ReactQuill = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+    const ForwardedQuill = ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+    ForwardedQuill.displayName = "ForwardedQuill";
+    return ForwardedQuill
   },
   {
     ssr: false,
@@ -13,7 +15,7 @@ const ReactQuill = dynamic(
 );
 
 
-const QuillNoSSRWrapper = ({ value, onChange }: any) => {
+export const RitchText = ({ value, onChange }: any) => {
   const editorRef = useRef<any>(null);
 
   const imageHandler = () => {
@@ -57,6 +59,7 @@ const QuillNoSSRWrapper = ({ value, onChange }: any) => {
       matchVisual: false,
     },
   }), []);
+
   return (
     <ReactQuill
       theme={"snow"}
@@ -68,5 +71,3 @@ const QuillNoSSRWrapper = ({ value, onChange }: any) => {
     />
   )
 }
-
-export default QuillNoSSRWrapper;

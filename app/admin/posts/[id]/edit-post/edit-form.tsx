@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { useRouter } from 'next/navigation'
 import toast from "react-hot-toast";
 
-import QuillNoSSRWrapper from "@/components/RichText";
+import { RitchText } from "@/components/RichText";
 import { Article } from "@/interfaces";
 import "react-quill/dist/quill.snow.css";
 import { editArticleAction } from "@/actions";
@@ -162,7 +162,7 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
                     <p id="helper-checkbox-text" className="text-xs font-normal">Make sure this article is one of the best of yours.</p>
                 </div>
             </div>
-            <QuillNoSSRWrapper
+            <RitchText
                 value={content}
                 onChange={handleQuillOnchange}
             />
