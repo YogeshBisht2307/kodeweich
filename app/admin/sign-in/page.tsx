@@ -1,19 +1,25 @@
-import { login } from "@/actions/login";
+import { Metadata } from "next";
+import { createClient } from "@/utils/supabase/server";
+import SignInForm from "./sign-in-form";
+import { redirect } from "next/navigation";
+
+
+export const metadata: Metadata = {
+    title: "Kodeweich: Sign In",
+    description: "Sign In"
+}
 
 export default async function Page() {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if(session){
+        redirect("/admin/dashboard");
+    }
+
     return (
         <main className="max-w-xs py-8 mx-auto lg:pt-16">
-            <form action={login} className="space-y-4">
-                <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium">Email</label>
-                    <input type="email" id="email" name="email" className="block w-full p-3 text-sm border rounded-lg focus:outline-none bg-muted text-muted-foreground" placeholder="name@kodewiech.com" required />
-                </div>
-                <div>
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
-                    <input type="password" id="password" name="password" className="block w-full p-3 text-sm border rounded-lg focus:outline-none bg-muted text-muted-foreground" placeholder="kodeweich" required />
-                </div>
-                <button type="submit" className="w-full px-5 py-3 text-sm font-medium text-center rounded-lg focus:outline-none bg-primary text-primary-foreground">Login</button>
-            </form>
+            <SignInForm/>
         </main>
     )
 }

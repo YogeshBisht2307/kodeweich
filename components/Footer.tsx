@@ -18,7 +18,7 @@ const Footer: React.FC<FooterProps> = () => {
                 </div>
                 <div className="flex flex-col self-start w-full">
                     <Link href={`/privacy-policy`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-muted-foreground hover:text-foreground transition py-1`}>Privacy Policy</Link>
-                    <Link href={`/admin/login`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-muted-foreground hover:text-foreground transition md:flex hidden py-1`}>Manage Blog</Link>
+                    <Link href={`/admin/sign-in`} target={"_blank"} className={`max-w-xl font-sm md:text-md lg:text-md text-muted-foreground hover:text-foreground transition md:flex hidden py-1`}>Manage Blog</Link>
                 </div>
             </div>
             <div className={"pt-16 pb-2 text-sm text-muted-foreground font-semibold"}>Copyright © 2023 Kodeweich</div>

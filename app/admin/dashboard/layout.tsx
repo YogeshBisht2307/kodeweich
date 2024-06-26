@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <main className="max-w-6xl flex justify-between mx-auto pt-8 pb-4 px-4 mt-8">
         <AdminSideBar/>
-        <section className="">{children}</section>
+        <section className="w-full">{children}</section>
     </main>
   );
 }

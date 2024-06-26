@@ -235,3 +235,67 @@ export const hardDeletePostById = async (id: string) => {
         where: { id: id }
     });
 }
+
+
+export const createArticle = async (
+    title: string,
+    slug: string,
+    content: string,
+    description: string,
+    featuredImage: string,
+    featuredPost: boolean,
+    published: boolean,
+    userEmail: string,
+    categories: { slug: string }[],
+    tags: { slug: string }[]
+) => {
+    return await prisma.articles.create({
+        data: {
+            title: title,
+            content: content,
+            featuredImage: featuredImage,
+            description: description,
+            featuredPost: featuredPost,
+            slug: slug,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            published: published,
+            author: { connect: { email: userEmail } },
+            categories: { connect: categories },
+            tags: { connect: tags }
+        }
+    });
+}
+
+export const updateArticleById = async (
+    id: string,
+    title: string,
+    slug: string,
+    content: string,
+    description: string,
+    featuredImage: string,
+    featuredPost: boolean,
+    published: boolean,
+    userEmail: string,
+    categories: { slug: string }[],
+    tags: { slug: string }[]
+) => {
+    return await prisma.articles.update({
+        where: {
+            id: id
+        },
+        data: {
+            title: title,
+            slug: slug,
+            content: content,
+            featuredImage: featuredImage,
+            description: description,
+            featuredPost: featuredPost,
+            published: published,
+            updatedAt: Date.now(),
+            author: { connect: { email: userEmail } },
+            categories: { connect: categories },
+            tags: { connect: tags }
+        }
+    })
+}

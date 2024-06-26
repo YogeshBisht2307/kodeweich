@@ -69,9 +69,9 @@ export const PostTable = (props: props) => {
 
 
   const updatePostStatus = async (id: string, published: boolean) => {
-    let errorCode = await updatePostStatusAction(id, published);
-    if (errorCode != 200) {
-      toast.error("Unable to update post status")
+    let response = await updatePostStatusAction(id, published);
+    if (!response.status) {
+      toast.error(response.message, { duration: 5000 })
       return;
     }
 
@@ -81,9 +81,9 @@ export const PostTable = (props: props) => {
   }
 
   const deletePost = async (id: string) => {
-    let errorCode = await deletePostByIdAction(id);
-    if (errorCode != 200) {
-      toast.error("Unable to delete post")
+    const response = await deletePostByIdAction(id);
+    if (!response.status) {
+      toast.error(response.message, { duration: 5000 })
       return;
     }
 

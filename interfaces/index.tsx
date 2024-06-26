@@ -1,6 +1,6 @@
-export interface TopBarProps {};
+export interface TopBarProps { };
 
-export interface FooterProps {};
+export interface FooterProps { };
 
 
 export interface Author {
@@ -51,4 +51,31 @@ export interface Article {
     updatedAt: String;
     authorId: string;
     author: Author;
+}
+
+export interface EditArticleActionBody {
+    id: string;
+    title: string;
+    content: string;
+    slug: string;
+    userEmail: string;
+    featuredImage: string;
+    featuredPost: boolean;
+    description: string;
+    published: boolean;
+    categories: string[];
+    tags: string[]
+}
+
+export interface CreateArticleActionBody {
+    title: string;
+    content: string;
+    slug: string;
+    userEmail: string;
+    featuredImage: string;
+    featuredPost: boolean;
+    description: string;
+    published: boolean;
+    categories: string[];
+    tags: string[]
 }

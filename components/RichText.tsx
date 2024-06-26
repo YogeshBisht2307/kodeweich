@@ -64,7 +64,7 @@ const QuillNoSSRWrapper = ({ value, onChange }: any) => {
       value={value}
       onChange={onChange}
       forwardedRef={editorRef}
-      className={`block w-full my-4 text-sm rounded-lg focus:outline-none dark:border-gray-600`}
+      className={`block w-full my-4 text-sm rounded-lg focus:outline-none bg-muted text-muted-foreground`}
     />
   )
 }
