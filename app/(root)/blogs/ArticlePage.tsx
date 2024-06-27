@@ -61,4 +61,4 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ articles, tags, categories, r
   )
 }
 
-export default ArticlePage
+export default ArticlePage;

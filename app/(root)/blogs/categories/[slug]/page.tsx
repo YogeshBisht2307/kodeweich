@@ -1,4 +1,4 @@
-import { getArticlesByCategory } from "@/prisma/queries/articles";
+import { getArticlesByCategory, getRelatedArticlesByFilters } from "@/prisma/queries/articles";
 import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
 import { titleCaseSlug } from "@/utils/function";
@@ -14,11 +14,18 @@ export default async function Page({ params }: { params: { slug: string } }) {
         notFound()
     }
 
-    const [articlesEntities, categoriesEntities, tagsEntities] = await Promise.all([
+    const [articlesEntities, categoriesEntities, tagsEntities, relatedArticlesEntities] = await Promise.all([
         getArticlesByCategory(params.slug),
         getCategories(),
         getTags(),
+        getRelatedArticlesByFilters(null)
     ]);
+
+    const relatedArticles = relatedArticlesEntities.map(rEntity => ({
+        ...rEntity,
+        createdAt: rEntity.createdAt.toString(),
+        updatedAt: rEntity.updatedAt.toString(),
+    }));
 
     const articles = articlesEntities.map(entity => ({
         ...entity,
@@ -31,7 +38,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <h1 className={`capitalize text-4xl sm:text-3xl md:text-4xl xl:text-5xl font-bold mb-8 my-2`}>
                 {titleCaseSlug(params.slug)}
             </h1>
-            <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities} />
+            <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities} relatedArticles={relatedArticles} />
         </section>
     )
 }
