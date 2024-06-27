@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast";
 
 import { RitchText } from "@/components/RichText";
-import "react-quill/dist/quill.snow.css";
 import { createArticleAction } from "@/actions";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import "react-quill/dist/quill.snow.css";
 
 
 interface props {
@@ -28,6 +30,7 @@ const AddArticleForm = ({ userEmail }: props) => {
     const [category, setCategory] = useState<string>("");
     const [newTags, setTags] = useState<string>("");
     const [editor, setEditor] = useState<any>(null);
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const router = useRouter()
 
     const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
@@ -56,6 +59,7 @@ const AddArticleForm = ({ userEmail }: props) => {
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
+        setIsUpdating(true);
         const updatedContent = editor ? modifyContent() : content;
 
         try {
@@ -73,9 +77,11 @@ const AddArticleForm = ({ userEmail }: props) => {
                 return
             }
 
-            toast.success("Article created!")
+            toast.success("Article created!");
+            setIsUpdating(false);
             router.push('/admin/posts');
         } catch (error) {
+            setIsUpdating(false);
             toast.error("Unable to create article", { duration: 5000 });
         }
     };
@@ -159,15 +165,20 @@ const AddArticleForm = ({ userEmail }: props) => {
                 value={content}
                 onChange={handleQuillOnchange}
             />
-            <button
-                className={`mr-4 py-2 cursor-pointer rounded-md bg-primary text-primary-foreground text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
-                disabled={!content || !articleInfo.title} type="submit"
-            >Create</button>
-            <button className="bg-secondary text-secondary-foreground cursor-pointer py-2 rounded-md text-sm sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
-                <a className="back" href="#" onClick={() => router.push('/admin/posts')}>
-                    Cancel
-                </a>
-            </button>
+            <Button
+                disabled={isUpdating}
+                type="submit"
+                className="mr-4 text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
+                {isUpdating ? "Updating..." : "Update"}
+            </Button>
+
+            <Button
+                type="button"
+                variant="secondary"
+                disabled={isUpdating}
+                className="text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
+                <Link className="back" href="/admin/posts">Cancel</Link>
+            </Button>
         </form>
     )
 }

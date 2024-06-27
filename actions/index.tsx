@@ -1,14 +1,14 @@
 "use server";
 
 import { CreateArticleActionBody, EditArticleActionBody } from "@/interfaces";
-import { ArticleWidgetEntity } from "@/prisma/entities/article";
-import { createArticle, getRelativeArticlesByFilters, hardDeletePostById, updateArticleById, updatePostStatus } from "@/prisma/queries/articles";
+import { 
+    createArticle,
+    hardDeletePostById,
+    updateArticleById,
+    updatePostStatus
+} from "@/prisma/queries/articles";
 import { revalidatePath } from "next/cache";
 
-
-export const getRelativeArticles = async (slug: String | null): Promise<ArticleWidgetEntity[]> => {
-    return getRelativeArticlesByFilters(slug);
-}
 
 export const editArticleAction = async (requestBody: EditArticleActionBody) => {
     const { id, title, userEmail, slug, content, featuredImage, featuredPost, description, published, categories, tags } = requestBody;

@@ -1,22 +1,29 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { Button } from "@/components/ui/button";
 
 
 const ConnectForm = () => {
     const form = useRef<any>();
+    const [isSending, setIsSending] = useState<boolean>(false);
+
     const sendEmail = (event: React.FormEvent) => {
         event.preventDefault();
+        setIsSending(true);
+    
         emailjs.sendForm(
             process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID as string,
             process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID as string,
             form.current, process.env.NEXT_PUBLIC_EMAIL_PUBLIC_KEY
         ).then(() => {
             form.current.reset();
+            setIsSending(false);
             toast.success('Thanku! We will revert you soon.', {duration: 5000})
         }, (error) => {
+            setIsSending(false);
             toast.error('Unable to send message.', {duration: 5000})
         });
     };
@@ -36,7 +43,13 @@ const ConnectForm = () => {
                     <label htmlFor="message" className="block mb-2 text-sm font-medium">Your message</label>
                     <textarea id="message" name="message" rows={4} className="block p-2.5 w-full text-sm border rounded-lg focus:outline-none bg-muted text-muted-foreground" placeholder="Leave a comment..."></textarea>
                 </div>
-                <button type="submit" className="px-5 py-3 text-sm font-medium text-center rounded-lg sm:w-fit focus:outline-none bg-primary text-primary-foreground float-right sm:float-left">Send message</button>
+                <Button 
+                    type="submit"
+                    disabled={isSending}
+                    className="px-5 py-3 text-sm font-medium text-center rounded-lg sm:w-fit focus:outline-none bg-primary text-primary-foreground float-right sm:float-left"
+                >
+                    {isSending ? "Sending..." : "Send message"}
+                </Button>
             </form>
         </div>
     )

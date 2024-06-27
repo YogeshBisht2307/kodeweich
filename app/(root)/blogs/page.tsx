@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getArticles } from "@/prisma/queries/articles";
+import { getArticles, getRelatedArticlesByFilters } from "@/prisma/queries/articles";
 import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
 import ArticlePage from "./ArticlePage";
@@ -40,11 +40,18 @@ export const metadata: Metadata = {
 
 
 export default async function Page() {
-    const [ articlesEntities, categoriesEntities, tagsEntities ] = await Promise.all([
+    const [articlesEntities, categoriesEntities, tagsEntities, relatedArticlesEntities] = await Promise.all([
         getArticles(),
         getCategories(),
         getTags(),
+        getRelatedArticlesByFilters(null)
     ]);
+
+    const relatedArticles = relatedArticlesEntities.map(rEntity => ({
+        ...rEntity,
+        createdAt: rEntity.createdAt.toString(),
+        updatedAt: rEntity.updatedAt.toString(),
+    }));
 
     const articles = articlesEntities.map(entity => ({
         ...entity,
@@ -60,7 +67,7 @@ export default async function Page() {
             <p className={`font-med  md:text-md lg:text-md text-muted-foreground lg:mb-8 mb-6`}>
                 Hi there! This is a platform for developers and technology enthusiasts who are interested in exploring and learning about the latest trends and advancements in cloud computing, DevOps, and programming languages. This blog is to share knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
             </p>
-            <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities}/>
+            <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities} relatedArticles={relatedArticles} />
         </main>
     )
 }

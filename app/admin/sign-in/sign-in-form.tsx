@@ -1,16 +1,31 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { login } from "@/actions/login";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 
 const initialState = {
     status: false,
     message: "",
 }
+
+function SubmitButton() {
+    const { pending } = useFormStatus()
+
+    return (
+        <Button
+            disabled={pending}
+            type="submit"
+            className="w-full px-5 py-3 text-sm font-medium text-center rounded-lg focus:outline-none"
+        >{pending ? "Logging..." : "Login"}
+        </Button>
+    )
+}
+
 
 const SignInForm = () => {
     const router = useRouter();
@@ -19,8 +34,8 @@ const SignInForm = () => {
     if (!state.status && state.message !== "") {
         toast.error(state.message);
     }
-    
-    if (state.status){
+
+    if (state.status) {
         router.push("/admin/dashboard");
     }
 
@@ -34,7 +49,7 @@ const SignInForm = () => {
                 <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
                 <input type="password" id="password" name="password" className="block w-full p-3 text-sm border rounded-lg focus:outline-none bg-muted text-muted-foreground" placeholder="kodeweich" required />
             </div>
-            <button type="submit" className="w-full px-5 py-3 text-sm font-medium text-center rounded-lg focus:outline-none bg-primary text-primary-foreground">Login</button>
+            <SubmitButton />
         </form>
     )
 }

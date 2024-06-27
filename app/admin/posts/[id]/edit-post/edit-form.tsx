@@ -3,11 +3,14 @@
 import React, { useState } from "react"
 import { useRouter } from 'next/navigation'
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 import { RitchText } from "@/components/RichText";
 import { Article } from "@/interfaces";
-import "react-quill/dist/quill.snow.css";
 import { editArticleAction } from "@/actions";
+import { Button } from "@/components/ui/button";
+
+import "react-quill/dist/quill.snow.css";
 
 
 interface props {
@@ -34,6 +37,7 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
     const [content, setContent] = useState<string>(article.content);
     const [category, setCategory] = useState<string>(categories.toString());
     const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
         setEditor(editor);
@@ -61,6 +65,7 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
+        setIsUpdating(true);
         const updatedContent = editor ? modifyContent() : content;
 
         try {
@@ -80,12 +85,15 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
             }
 
             toast.success("Article Updated!")
+            setIsUpdating(false);
             router.push("/admin/posts");
         } catch (error) {
             console.log(error)
+            setIsUpdating(false);
             toast.error("Unable to update article", { duration: 5000 });
         }
     };
+
     return (
         <form onSubmit={submitData}>
             <input
@@ -166,15 +174,20 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
                 value={content}
                 onChange={handleQuillOnchange}
             />
-            <button
-                className={`mr-4 py-2 cursor-pointer rounded-md bg-primary text-primary-foreground text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
-                disabled={!content || !articleInfo.title} type="submit"
-            >Update</button>
-            <button className="bg-secondary text-secondary-foreground cursor-pointer py-2 rounded-md text-sm sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
-                <a className="back" href="#" onClick={() => router.push('/admin/posts')}>
-                    Cancel
-                </a>
-            </button>
+            <Button
+                disabled={isUpdating}
+                type="submit"
+                className="mr-4 text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
+                {isUpdating ? "Updating..." : "Update"}
+            </Button>
+
+            <Button
+                type="button"
+                variant="secondary"
+                disabled={isUpdating}
+                className="text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5">
+                <Link className="back" href="/admin/posts">Cancel</Link>
+            </Button>
         </form>
     )
 }

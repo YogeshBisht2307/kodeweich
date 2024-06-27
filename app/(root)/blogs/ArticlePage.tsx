@@ -11,11 +11,12 @@ import TagListCard from "@/components/TagListCard";
 interface ArticlePageProps {
   articles: ArticleWidget[],
   categories: Category[],
-  tags: Tag[]
+  tags: Tag[],
+  relatedArticles: ArticleWidget[]
 }
 
 
-const ArticlePage: React.FC<ArticlePageProps> = ({ articles, tags, categories }) => {
+const ArticlePage: React.FC<ArticlePageProps> = ({ articles, tags, categories, relatedArticles }) => {
   const [articlesList, setArticleList] = useState<Array<any>>(articles);
   const [searchValue, setSearchValue] = useState<String>("");
 
@@ -52,7 +53,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ articles, tags, categories })
       </div>
       <div>
         <SearchInputCard value={searchValue} onSearch={onSearch} onSubmit={onSubmit} />
-        <ArticleWidgetCard />
+        <ArticleWidgetCard relatedArticles={relatedArticles} />
         <CategoryListCard categories={categories} />
         <TagListCard tags={tags} />
       </div>

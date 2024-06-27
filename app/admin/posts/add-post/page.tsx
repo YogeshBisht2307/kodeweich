@@ -25,7 +25,7 @@ export default async function Page() {
 
   return (
     <>
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" />
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer />
       <div className={`max-w-4xl px-8 mx-auto`}>
         <h1 className={`mb-8 text-4xl sm:text-3xl font-extrabold md:text-4xl`}>
           Create Article

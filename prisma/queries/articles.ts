@@ -184,7 +184,7 @@ export const getArticleByIdForAdmin = cache(async (id: string): Promise<ArticleD
 });
 
 
-export const getRelativeArticlesByFilters = cache(async (slug: String | null): Promise<ArticleWidgetEntity[]> => {
+export const getRelatedArticlesByFilters = cache(async (slug: String | null): Promise<ArticleWidgetEntity[]> => {
     let conditions = { published: true }
     if (slug) {
         conditions = { ...conditions, ...{ NOT: { slug: slug.toString() } } }

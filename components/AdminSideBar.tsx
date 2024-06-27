@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Session } from "@supabase/supabase-js";
 
 import { 
   DashboardIcon,
@@ -13,7 +11,6 @@ import {
   FrameIcon,
   GearIcon
 } from "@radix-ui/react-icons";
-import { createClient } from "@/utils/supabase/client";
 
 
 
