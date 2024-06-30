@@ -1,12 +1,14 @@
 "use server";
 
 import { CreateArticleActionBody, EditArticleActionBody } from "@/interfaces";
-import { 
+import {
     createArticle,
     hardDeletePostById,
     updateArticleById,
     updatePostStatus
 } from "@/prisma/queries/articles";
+import { createCategory, getCategoryBySlug } from "@/prisma/queries/categories";
+import { createTag, getTagBySlug } from "@/prisma/queries/tags";
 import { revalidatePath } from "next/cache";
 
 
@@ -130,6 +132,66 @@ export const deletePostByIdAction = async (id: string) => {
         return { status: true, message: "ArPost Deleted!" }
     } catch (error) {
         console.error("Unable to delete post: " + error)
+        return { status: false, message: "Internal Server Error" }
+    }
+}
+
+
+export const addCategoryAction = async (prevState: any, formData: FormData) => {
+    const data = {
+        title: formData.get('title') as string,
+        slug: formData.get('slug') as string,
+    }
+
+    if (!data.title) {
+        return { status: false, message: "Category title required" }
+    }
+
+    if (!data.slug) {
+        return { status: false, message: "Category slug required" }
+    }
+
+    try {
+        const categoryEntity = await getCategoryBySlug(data.slug);
+        if (categoryEntity) {
+            return { status: false, message: "Category already exists!" }
+        }
+
+        await createCategory(data.title, data.slug)
+        revalidatePath("/admin/categories", "page")
+        return { status: true, message: "Category Created!" }
+    } catch (error) {
+        console.error("Unable to create category: " + error)
+        return { status: false, message: "Internal Server Error" }
+    }
+}
+
+
+export const addTagAction = async (prevState: any, formData: FormData) => {
+    const data = {
+        title: formData.get('title') as string,
+        slug: formData.get('slug') as string,
+    }
+
+    if (!data.title) {
+        return { status: false, message: "Tag title required" }
+    }
+
+    if (!data.slug) {
+        return { status: false, message: "Tag slug required" }
+    }
+
+    try {
+        const tagEntity = await getTagBySlug(data.slug);
+        if (tagEntity) {
+            return { status: false, message: "Tag already exists!" }
+        }
+
+        await createTag(data.title, data.slug)
+        revalidatePath("/admin/tags", "page")
+        return { status: true, message: "Tag Created!" }
+    } catch (error) {
+        console.error("Unable to create Tag: " + error)
         return { status: false, message: "Internal Server Error" }
     }
 }

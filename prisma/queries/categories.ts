@@ -13,3 +13,25 @@ export const getCategories = cache(async(): Promise<CategoryEntity[]> => {
         return []
     }
 });
+
+export const getCategoryBySlug = cache(async(slug: string): Promise<CategoryEntity | null> => {
+    try {
+        return await prisma.categories.findUnique({
+            where: {slug: slug },
+            select: {title: true, slug: true}
+        });
+    } catch (error){
+        console.error(error)
+        return null
+    }
+})
+
+export const createCategory = async(title: string, slug: string) => {
+    return await prisma.categories.create({
+        data: {
+            title: title,
+            slug: slug,
+            createdAt: Date.now()
+        }
+    });
+}
