@@ -1,23 +1,26 @@
-import dynamic from 'next/dynamic';
-import { useMemo, useRef } from 'react';
+import dynamic from "next/dynamic";
+import { useMemo, useRef } from "react";
+
 
 const ReactQuill = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+    const ForwardedQuill = ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />;
+    ForwardedQuill.displayName = "ForwardedQuill";
+    return ForwardedQuill
   },
   {
     ssr: false,
   }
 );
 
-const QuillNoSSRWrapper = ({value, onChange}: any) => {
+
+export const RitchText = ({ value, onChange }: any) => {
   const editorRef = useRef<any>(null);
 
   const imageHandler = () => {
     const editor = editorRef.current.getEditor();
     const range = editor.getSelection();
-    // show a cusome model
     const value = prompt("Please enter the image URL")
 
     if (value && range) {
@@ -51,21 +54,20 @@ const QuillNoSSRWrapper = ({value, onChange}: any) => {
         image: imageHandler
       }
     },
-    syntax: true,
+    syntax: false,
     clipboard: {
       matchVisual: false,
     },
   }), []);
+
   return (
-      <ReactQuill
-          theme={"snow"}
-          modules={modules}
-          value={value}
-          onChange={onChange}
-          forwardedRef={editorRef}
-          className={`block w-full my-4 text-sm rounded-lg focus:outline-none dark:border-gray-600`}
-      />
+    <ReactQuill
+      theme={"snow"}
+      modules={modules}
+      value={value}
+      onChange={onChange}
+      forwardedRef={editorRef}
+      className={`block w-full my-4 text-sm rounded-lg focus:outline-none bg-muted text-muted-foreground`}
+    />
   )
 }
-
-export default QuillNoSSRWrapper;
