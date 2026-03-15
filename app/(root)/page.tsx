@@ -54,7 +54,7 @@ export default async function Page() {
   }));
 
   return (
-    <main className={`max-w-4xl mx-auto py-8 px-4`}>
+    <main className={`max-w-5xl mx-auto py-8 px-4`}>
       <section className="flex flex-col-reverse items-start justify-between sm:flex-row sm:items-center">
         <div>
           <h1 className={`text-4xl sm:text-3xl font-extrabold md:text-4xl xl:text-5xl mb-4`}>
