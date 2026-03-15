@@ -60,11 +60,11 @@ export default async function Page() {
           <h1 className={`text-4xl sm:text-3xl font-extrabold md:text-4xl xl:text-5xl mb-4`}>
             Unlock the Power of Programming
           </h1>
-          <p className={`max-w-xl font-med text-muted-foreground md:text-md lg:text-md lg:mb-8 mb-6`}>
+          <p className={`max-w-xl font-medium text-muted-foreground md:text-base lg:text-base lg:mb-8 mb-6`}>
             Unlock the power of coding with our user-friendly platform. Learn the latest languages and technologies at your own pace. Join our community of learners today!
           </p>
         </div>
-        <div className='w-[300px] md:w-[400px] relative transform hover:scale-[1.1] transition-all mb-8 sm:mb-0'>
+        <div className='w-[300px] md:w-[400px] relative hover:scale-[1.1] transition-all mb-8 sm:mb-0'>
           <Image src={HeroImage} priority={true} width={400} alt={"kodeweich main screen image"} />
         </div>
       </section>
@@ -82,7 +82,7 @@ export default async function Page() {
           <h3 className={`font-bold text-2xl md:text-3xl tracking-tight mb-4 mt-4`}>
             Learn Django and JavaScript
           </h3>
-          <p className={`max-w-xl font-sm text-muted-foreground md:text-md lg:text-md mb-6 lg:mb-8`}>
+          <p className={`max-w-xl text-sm text-muted-foreground md:text-base lg:text-base mb-6 lg:mb-8`}>
             Learn the fundamentals of Django web framework and JavaScript programming language and build full-featured web applications using both technologies by the end of the course. Let&apos;s get started!
           </p>
         </div>
@@ -90,28 +90,28 @@ export default async function Page() {
           <Link href='https://youtu.be/-NF-fWJXayw' aria-label="Learn more about Django" target={"_blank"}>
             <div className="flex flex-row items-center justify-between py-3">
               <div className="flex items-center">
-                <div className="text-primary font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">01</div>
-                <h4 className="w-full font-bold text-medium sm:text-lg">Introduction to Django</h4>
+                <div className="text-primary font-extrabold text-left hover:scale-[1.3] transition-all mr-6">01</div>
+                <h4 className="w-full font-bold text-base sm:text-lg">Introduction to Django</h4>
               </div>
-              <svg className="fill-primary hover:fill-primary transform hover:scale-[1.2] transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
+              <svg className="fill-primary hover:fill-primary hover:scale-[1.2] transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
             </div>
           </Link>
           <Link href='https://youtu.be/tx7TnjZ_nVk' aria-label="Learn more about Django data fetching" target={"_blank"}>
             <div className="flex flex-row items-center justify-between py-3">
               <div className="flex items-center">
-                <div className="text-primary font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">02</div>
-                <h4 className="w-full font-bold text-medium sm:text-lg">Django data fetching and Queryset</h4>
+                <div className="text-primary font-extrabold text-left hover:scale-[1.3] transition-all mr-6">02</div>
+                <h4 className="w-full font-bold text-base sm:text-lg">Django data fetching and Queryset</h4>
               </div>
-              <svg className="fill-primary hover:fill-primary transform hover:scale-[1.2] transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
+              <svg className="fill-primary hover:fill-primary hover:scale-[1.2] transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
             </div>
           </Link>
           <Link href='https://youtu.be/H-kwLD3ueF4' aria-label="Learn more about Canvas animation" target={"_blank"}>
             <div className="flex flex-row items-center justify-between py-3">
               <div className="flex items-center">
-                <div className="text-primary font-extrabold text-left transform hover:scale-[1.3] transition-all mr-6">03</div>
-                <h4 className="w-full font-bold text-medium sm:text-lg">Canvas animation using Javascript</h4>
+                <div className="text-primary font-extrabold text-left hover:scale-[1.3] transition-all mr-6">03</div>
+                <h4 className="w-full font-bold text-base sm:text-lg">Canvas animation using Javascript</h4>
               </div>
-              <svg className='fill-primary hover:fill-primary transform hover:scale-[1.2] transition-all' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
+              <svg className='fill-primary hover:fill-primary hover:scale-[1.2] transition-all' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 16v-2.048s-7.156-.066-11 4.048c1.806-7.861 11-9.913 11-9.913v-2.087l7.18 5.02-7.18 4.98zm6-10v2.184l3.891 2.836-3.891 2.835v2.145l7-4.98-7-5.02z" /></svg>
             </div>
           </Link>
         </div>

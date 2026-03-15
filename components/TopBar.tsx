@@ -32,19 +32,19 @@ const TopBar: React.FC<TopBarProps> = () => {
     return (
         <header className={`max-w-4xl mx-auto px-4 py-4`}>
             <nav className={"flex flex-row items-center justify-between"}>
-                <div className={"w-[55px] sm:w-[60px]  transform hover:scale-[1.1] transition-all py-3 px-1 rounded-full"}>
+                <div className={"w-[55px] sm:w-[60px] hover:scale-[1.1] transition-all py-3 px-1 rounded-full"}>
                     <Link href="/"><Image src={theme == "light" ? CompanyLogo : CompanyLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
                 </div>
                 <ul className={"flex flex-row md:space-x-8"}>
                     <li>
                         <Link 
-                            className={`text-muted-foreground font-medium text-sm hover:bg-muted rounded transform hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
+                            className={`text-muted-foreground font-medium text-sm hover:bg-muted rounded hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
                             href="/about">ABOUT
                         </Link>
                     </li>
                     <li>
                         <Link 
-                            className={`text-muted-foreground font-medium text-sm hover:bg-muted rounded transform hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
+                            className={`text-muted-foreground font-medium text-sm hover:bg-muted rounded hover:scale-[1.05] transition-all py-1 px-2 sm:px-4`}
                             href="/connect">CONNECT
                         </Link>
                     </li>
@@ -55,7 +55,7 @@ const TopBar: React.FC<TopBarProps> = () => {
                         type="button"
                         aria-label="Toggle Dark Mode"
                         onClick={handleThemeToggle}
-                        className="rounded-lg text-sm bg-primary text-primary-foreground shadow transform hover:scale-[1.05]
+                        className="rounded-lg text-sm bg-primary text-primary-foreground shadow hover:scale-[1.05]
                         transition-all p-2"
                         >
                         {
@@ -89,7 +89,7 @@ const TopBar: React.FC<TopBarProps> = () => {
                         }
                     </button>
                     <Link 
-                        className={`rounded-md bg-primary text-primary-foreground shadow text-xs sm:text-sm font-sm sm:font-medium transform hover:scale-[1.03] transition-all sm:py-2 sm:px-6 px-3 pt-2.5`}
+                        className={`inline-flex items-center rounded-md bg-primary text-primary-foreground shadow text-xs sm:text-sm font-medium hover:scale-[1.03] transition-all py-2 sm:py-2 sm:px-6 px-3`}
                         href="/blogs"
                     >Blog</Link>
                 </div>
