@@ -6,6 +6,11 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import "./highlight.css";
 import GoogleAdsense from "@/utils/GoogleAdsense";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default function RootLayout({
   children,
@@ -13,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${poppins400.className} text-foreground bg-background`}>
         <Toaster
           position="top-right"
