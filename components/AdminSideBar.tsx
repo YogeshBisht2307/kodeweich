@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import { 
-  DashboardIcon,
-  ReaderIcon,
-  StackIcon,
-  PersonIcon,
+  LayoutDashboard,
+  Spotlight,
+  Layers,
+  User,
   FrameIcon,
-  GearIcon
-} from "@radix-ui/react-icons";
+  Settings,
+  ChevronLeft
+} from "lucide-react";
 
 
 
@@ -31,19 +33,19 @@ interface SubmenuItems {
 const sideMenu: NavItems[] = [
   {
     label: "Dashboard",
-    icon: <DashboardIcon/>,
+    icon: <LayoutDashboard/>,
     link: "/admin/dashboard",
     isParent: false,
   },
   {
     label: "Posts",
-    icon: <ReaderIcon/>,
+    icon: <Spotlight/>,
     link: "/admin/posts",
     isParent: false,
   },
   {
     label: "Categories",
-    icon: <StackIcon/>,
+    icon: <Layers/>,
     link: "/admin/categories",
     isParent: false,
   },
@@ -55,13 +57,13 @@ const sideMenu: NavItems[] = [
   },
   {
     label: "Users",
-    icon: <PersonIcon/>,
+    icon: <User/>,
     link: "/admin/users",
     isParent: false,
   },
   {
     label: "Settings",
-    icon: <GearIcon/>,
+    icon: <Settings/>,
     link: "/admin/settings",
     isParent: true,
     subMenu: [
@@ -80,18 +82,39 @@ const sideMenu: NavItems[] = [
 
 const AdminSideBar = () => {
     const pathname = usePathname();
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+
     return (
         <>
-            <aside className={`w-60 bg-background text-foreground border border-secondary pt-4 rounded-md h-4/6`} aria-label="Sidebar">
-                <div className="h-full px-3 pb-4 overflow-y-auto">
-                    <ul className="space-y-2 font-medium">
+            <aside className={`${
+                isCollapsed ? "w-20" : "w-60"
+            } bg-background text-foreground border border-secondary pt-4 rounded-md h-4/6 transition-all duration-300 ease-in-out`} aria-label="Sidebar">
+                <div className="h-full pb-4 overflow-y-auto flex flex-col">
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className="self-end mr-2 p-1 rounded hover:bg-secondary transition-colors"
+                        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        <ChevronLeft className={`w-5 h-5 transition-transform ${
+                            isCollapsed ? "rotate-180" : ""
+                        }`} />
+                    </button>
+                    <ul className="space-y-2 font-medium px-3">
                         {sideMenu.map((menu) => (
                             <li 
                                 key={menu.link}
                             >
-                                <Link href={menu.link} className={`${pathname.startsWith(menu.link) ? "bg-primary text-primary-foreground" : ""} flex items-center p-2 rounded-lg hover:bg-primary hover:text-primary-foreground group`}>
+                                <Link 
+                                    href={menu.link} 
+                                    className={`${
+                                        pathname.startsWith(menu.link) ? "bg-primary text-primary-foreground" : ""
+                                    } flex p-2 rounded-lg hover:bg-primary hover:text-primary-foreground group ${
+                                        isCollapsed ? "" : ""
+                                    }`}
+                                    title={isCollapsed ? menu.label : ""}
+                                >
                                     {menu.icon}
-                                    <span className="ml-3">{menu.label}</span>
+                                    {!isCollapsed && <span className="ml-3">{menu.label}</span>}
                                 </Link>
                             </li>
                         ))}

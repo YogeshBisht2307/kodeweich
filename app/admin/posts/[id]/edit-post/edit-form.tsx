@@ -5,12 +5,10 @@ import { useRouter } from 'next/navigation'
 import toast from "react-hot-toast";
 import Link from "next/link";
 
-import { RitchText } from "@/components/RichText";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { Article } from "@/interfaces";
 import { editArticleAction } from "@/actions";
 import { Button } from "@/components/ui/button";
-
-import "react-quill/dist/quill.snow.css";
 
 
 interface props {
@@ -32,47 +30,21 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
     }
 
     const router = useRouter();
-    const [editor, setEditor] = useState<any>(null);
     const [newTags, setTags] = useState<string>(tags.toString());
     const [content, setContent] = useState<string>(article.content);
     const [category, setCategory] = useState<string>(categories.toString());
     const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-    const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
-        setEditor(editor);
-        setContent(text);
-    }
-
-    const modifyContent = () => {
-        const cont = document.createElement("div");
-        cont.innerHTML = editor?.getHTML();
-        const pres = cont.querySelectorAll("pre.ql-syntax");
-        const images = cont.querySelectorAll("img");
-
-        images.forEach((img) => {
-            img.setAttribute("alt", img.currentSrc.split("/")[5].split(".")[0].replaceAll("-", " "))
-        });
-
-        pres.forEach((element) => {
-            if (element.getElementsByTagName('code').length > 0) {
-                return;
-            }
-            element.innerHTML = `<code>${element.innerHTML}</code>`;
-        });
-        return cont.innerHTML;
-    }
-
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         setIsUpdating(true);
-        const updatedContent = editor ? modifyContent() : content;
 
         try {
             const body = {
                 ...articleInfo,
                 ...{ categories: category.replace(/ /g, '').split(',') },
-                content: updatedContent,
+                content,
                 tags: newTags.replace(/ /g, '').split(','),
                 id: article.id,
                 userEmail: userEmail
@@ -170,9 +142,10 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
                     <p id="helper-checkbox-text" className="text-xs font-normal">Make sure this article is one of the best of yours.</p>
                 </div>
             </div>
-            <RitchText
+            <MarkdownEditor
                 value={content}
-                onChange={handleQuillOnchange}
+                onChange={setContent}
+                placeholder="Update your article using Markdown..."
             />
             <Button
                 disabled={isUpdating}

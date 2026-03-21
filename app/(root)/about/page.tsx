@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     return (
-        <main className={`max-w-4xl mx-auto pt-8 pb-4 px-4`}>
+        <main className={`max-w-5xl mx-auto pt-8 pb-4 px-4`}>
             <h1 className={`text-4xl sm:text-3xl font-extrabold md:text-4xl xl:text-5xl mb-4`}>
                 About
             </h1>

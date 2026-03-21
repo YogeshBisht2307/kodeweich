@@ -2,10 +2,10 @@
 
 import * as React from "react"
 import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons"
+  ChevronUp,
+  ChevronDown,
+  Ellipsis,
+} from "lucide-react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -126,7 +126,7 @@ export const PostTable = (props: props) => {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Title
-            <CaretSortIcon className="ml-2 h-4 w-4" />
+            <ChevronUp className="ml-2 h-4 w-4" />
           </Button>
         )
       },
@@ -151,7 +151,7 @@ export const PostTable = (props: props) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">Open menu</span>
-                  <DotsHorizontalIcon className="h-4 w-4" />
+                  <Ellipsis className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -232,7 +232,7 @@ export const PostTable = (props: props) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

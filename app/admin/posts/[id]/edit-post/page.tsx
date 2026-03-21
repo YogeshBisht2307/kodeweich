@@ -11,20 +11,24 @@ export const metadata: Metadata = {
     description: "Edit Post"
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    if (!id) {
+        notFound();
+    }
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (!user) {
         redirect("/admin/sign-in");
     }
 
-    if (!session.user.email) {
+    if (!user.email) {
         redirect("/admin/sign-in");
     }
 
 
-    const articleDetailEntity = await getArticleByIdForAdmin(params.id)
+    const articleDetailEntity = await getArticleByIdForAdmin(id)
     if (articleDetailEntity == null) {
         notFound();
     }
@@ -52,7 +56,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <li className={`font-med md:text-md lg:text-md`}>Write a strong headline that accurately reflects the content of the article and grabs the reader&apos;s attention.</li>
                 </ul>
 
-                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={session.user.email.toString()} />
+                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={user.email.toString()} />
             </div>
         </>
     );

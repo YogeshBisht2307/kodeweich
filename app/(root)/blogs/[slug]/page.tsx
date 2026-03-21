@@ -1,19 +1,17 @@
 import Script from "next/script"
 import { notFound } from "next/navigation";
 
-import ArticleWidgetCard from "@/components/ArticleWidgetCard";
-import CategoryListCard from "@/components/CategoryListCard";
-import TagListCard from "@/components/TagListCard";
 import { getArticleBySlug, getArticleSeoInfoBySlug, getRelatedArticlesByFilters } from "@/prisma/queries/articles";
 import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
-import ArticleDetail from "./ArticleDetail";
 import { Metadata } from "next";
+import ReadingView from "./ReadingView";
 
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-    const articleEntity = await getArticleSeoInfoBySlug(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const {slug} = await params;
+    const articleEntity = await getArticleSeoInfoBySlug(slug)
     const article = {
         ...articleEntity,
         createdAt: articleEntity?.createdAt.toString(),
@@ -55,12 +53,26 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
   
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ reading_mode?: string }>;
+}) {
+    const { slug } = await params;
+    const { reading_mode } = await searchParams;
+    const showSidebar = reading_mode !== "1";
+
+    if (!slug) {
+        notFound();
+    }
+
     const [articleEntity, categoriesEntities, tagsEntities, relatedArticlesEntities] = await Promise.all([
-        getArticleBySlug(params.slug),
+        getArticleBySlug(slug),
         getCategories(),
         getTags(),
-        getRelatedArticlesByFilters(params.slug)
+        getRelatedArticlesByFilters(slug)
     ]);
 
     if (articleEntity == null) {
@@ -82,7 +94,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     return (
         <>
             <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer />
-            <main className={`max-w-4xl mx-auto py-8 px-4`}>
+            <main className={`max-w-5xl mx-auto py-8 px-4`}>
                 <h1 className={`capitalize text-3xl font-semibold max-w-3xl sm:text-3xl sm:font-extrabold md:text-4xl mb-2`}>{article?.title}</h1>
                 <div className={`my-4 flex justify-between items-center`}>
                     <span className={`text-sm p-2 rounded transition bg-muted text-muted-foreground hover:text-foreground`}>{`${new Date(Number(article?.createdAt)).toDateString()}`}</span>
@@ -91,16 +103,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 <p className={`font-med max-w-3xl md:text-md lg:text-md lg:mb-8 mb-6`}>
                     {article?.description}
                 </p>
-                <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-6`}>
-                    <div className={`col-span-2 relative min-h-screen`}>
-                        <ArticleDetail article={article} />
-                    </div>
-                    <div className={`sticky top-0 h-full`}>
-                        <ArticleWidgetCard slug={params.slug} relatedArticles={relatedArticles}/>
-                        <CategoryListCard categories={categoriesEntities} />
-                        <TagListCard tags={tagsEntities} />
-                    </div>
-                </div>
+                <ReadingView
+                    article={article}
+                    relatedArticles={relatedArticles}
+                    categories={categoriesEntities}
+                    tags={tagsEntities}
+                    slug={slug}
+                    showSidebar={showSidebar}
+                />
             </main>
         </>
     )

@@ -9,13 +9,14 @@ import ArticlePage from "../../ArticlePage";
 export const revalidate = 3600;
 
 
-export default async function Page({ params }: { params: { slug: string } }) {
-    if (!params.slug) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    if (!slug) {
         notFound()
     }
 
     const [articlesEntities, categoriesEntities, tagsEntities, relatedArticlesEntities] = await Promise.all([
-        getArticlesByTag(params.slug),
+        getArticlesByTag(slug),
         getCategories(),
         getTags(),
         getRelatedArticlesByFilters(null)
@@ -34,9 +35,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }));
 
     return (
-        <section className={`max-w-4xl mx-auto py-8 px-4`}>
+        <section className={`max-w-5xl mx-auto py-8 px-4`}>
             <h1 className={`capitalize text-4xl sm:text-3xl md:text-4xl xl:text-5xl font-bold mb-8 my-2`}>
-                {titleCaseSlug(params.slug)}
+                {titleCaseSlug(slug)}
             </h1>
             <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities} relatedArticles={relatedArticles}/>
         </section>

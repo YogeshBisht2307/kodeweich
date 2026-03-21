@@ -12,14 +12,14 @@ export const metadata: Metadata = {
 
 
 export default async function Page() {
-  const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     redirect("/admin/sign-in");
   }
 
-  if (!session.user.email) {
+  if (!user.email) {
     redirect("/admin/sign-in");
   }
 
@@ -35,7 +35,7 @@ export default async function Page() {
           <li className={`font-med md:text-md lg:text-md`}>Use short paragraphs and subheadings to break up the text and make it easy to read.</li>
           <li className={`font-med md:text-md lg:text-md`}>Write a strong headline that accurately reflects the content of the article and grabs the reader&apos;s attention.</li>
         </ul>
-        <AddArticleForm userEmail={session.user.email.toString()} />
+        <AddArticleForm userEmail={user.email.toString()} />
       </div>
     </>
   );

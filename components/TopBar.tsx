@@ -24,13 +24,15 @@ const TopBar: React.FC<TopBarProps> = () => {
 
     useEffect(() => {
         let getMode = window.localStorage.getItem("mode");
-        if (getMode && getMode === "dark"){
-          document.documentElement.classList.add("dark");
+        if (getMode && getMode === "light"){
+            document.documentElement.classList.add("light");
+        } else {
+            document.documentElement.classList.add("dark");
         }
     }, [])
 
     return (
-        <header className={`max-w-4xl mx-auto px-4 py-4`}>
+        <header className={`max-w-5xl mx-auto px-4 py-4`}>
             <nav className={"flex flex-row items-center justify-between"}>
                 <div className={"w-[55px] sm:w-[60px] hover:scale-[1.1] transition-all py-3 px-1 rounded-full"}>
                     <Link href="/"><Image src={theme == "light" ? CompanyLogo : CompanyLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
@@ -56,7 +58,7 @@ const TopBar: React.FC<TopBarProps> = () => {
                         aria-label="Toggle Dark Mode"
                         onClick={handleThemeToggle}
                         className="rounded-lg text-sm bg-primary text-primary-foreground shadow hover:scale-[1.05]
-                        transition-all p-2"
+                        transition-all p-2 cursor-pointer"
                         >
                         {
                             theme === "light"

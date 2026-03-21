@@ -1,4 +1,4 @@
-import prisma from "../client";
+import { prisma } from "@/lib/primsa";
 import { cache } from "react";
 import { CategoryEntity } from "../entities/category";
 

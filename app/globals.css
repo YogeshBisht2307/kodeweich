@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "highlight.js/styles/github-dark.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -48,6 +49,32 @@
   margin: 0.5rem 0rem;
   background-color: rgb(11, 18, 27) !important;
   border-radius: 0.5rem;
+}
+
+/* Syntax highlighting styles */
+code.hljs {
+  background-color: rgb(11, 18, 27) !important;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  display: block;
+  line-height: 1.5;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Courier New", monospace;
+}
+
+pre code.hljs {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+pre {
+  background-color: rgb(11, 18, 27) !important;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  padding: 1rem;
+  margin: 0.5rem 0rem;
 }
 
 .article-detail h2 {

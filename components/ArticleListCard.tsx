@@ -6,6 +6,7 @@ interface ArticleCardProps {
 }
 
 const ArticleListCard: React.FC<ArticleCardProps> = ({ article }) => {
+    console.log(article.slug)
     return (
         <div className={`mb-10 px-6 py-8 rounded-lg border-2 border-y-secondary border-x-primary bg-card text-card-foreground`}>
             <Link href={`/blogs/${article.slug}`}><h2 className={`text-xl sm:text-2xl font-bold w-full hover:text-primary pb-1`}>{article.title}</h2></Link>

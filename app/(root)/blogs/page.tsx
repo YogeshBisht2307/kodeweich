@@ -60,11 +60,11 @@ export default async function Page() {
     }));
 
     return (
-        <main className={`max-w-4xl mx-auto py-8 px-4`}>
+        <main className={`max-w-5xl mx-auto py-8 px-4`}>
             <h1 className={`text-4xl sm:text-3xl md:text-4xl xl:text-5xl font-bold mb-4`}>
                 Blogs
             </h1>
-            <p className={`font-med  md:text-md lg:text-md text-muted-foreground lg:mb-8 mb-6`}>
+            <p className={`font-medium md:text-md lg:text-md text-muted-foreground lg:mb-8 mb-6`}>
                 Hi there! This is a platform for developers and technology enthusiasts who are interested in exploring and learning about the latest trends and advancements in cloud computing, DevOps, and programming languages. This blog is to share knowledge and experience with others and help make the world of coding more accessible to beginners and experts alike.
             </p>
             <ArticlePage articles={articles} categories={categoriesEntities} tags={tagsEntities} relatedArticles={relatedArticles} />

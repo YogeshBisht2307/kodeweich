@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useActionState } from "react"
 import { login } from "@/actions/login";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ function SubmitButton() {
 const SignInForm = () => {
     const router = useRouter();
 
-    const [state, formAction] = useFormState(login, initialState)
+    const [state, formAction] = useActionState(login, initialState)
     if (!state.status && state.message !== "") {
         toast.error(state.message);
     }

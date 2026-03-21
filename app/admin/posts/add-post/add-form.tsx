@@ -4,11 +4,10 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast";
 
-import { RitchText } from "@/components/RichText";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { createArticleAction } from "@/actions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import "react-quill/dist/quill.snow.css";
 
 
 interface props {
@@ -29,44 +28,18 @@ const AddArticleForm = ({ userEmail }: props) => {
     const [content, setContent] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [newTags, setTags] = useState<string>("");
-    const [editor, setEditor] = useState<any>(null);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const router = useRouter()
-
-    const handleQuillOnchange = (text: string, delta: any, source: string, editor: any) => {
-        setEditor(editor);
-        setContent(text);
-    }
-
-    const modifyContent = () => {
-        const cont = document.createElement("div");
-        cont.innerHTML = editor?.getHTML();
-        const pres = cont.querySelectorAll("pre.ql-syntax");
-        const images = cont.querySelectorAll("img");
-        images.forEach((img) => {
-            img.setAttribute("alt", img.currentSrc.split("/")[5].split(".")[0].replaceAll("-", " "))
-        })
-
-        pres.forEach((element) => {
-            if (element.getElementsByTagName('code').length > 0) {
-                return;
-            }
-            element.innerHTML = `<code>${element.innerHTML}</code>`;
-        })
-
-        return cont.innerHTML;
-    }
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         setIsUpdating(true);
-        const updatedContent = editor ? modifyContent() : content;
 
         try {
             const body = {
                 ...articleInfo,
                 ...{ categories: category.replace(/ /g, '').split(',') },
-                content: updatedContent,
+                content,
                 userEmail: userEmail,
                 tags: newTags.replace(/ /g, '').split(',')
             }
@@ -161,9 +134,10 @@ const AddArticleForm = ({ userEmail }: props) => {
                     <p id="helper-checkbox-text" className="text-xs font-normal">Make sure this article is one of the best of yours.</p>
                 </div>
             </div>
-            <RitchText
+            <MarkdownEditor
                 value={content}
-                onChange={handleQuillOnchange}
+                onChange={setContent}
+                placeholder="Write your article using Markdown..."
             />
             <Button
                 disabled={isUpdating}

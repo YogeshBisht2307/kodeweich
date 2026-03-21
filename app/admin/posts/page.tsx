@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 }
 
 export default async function Posts() {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
         redirect("/admin/sign-in");
     }
 
@@ -29,7 +29,7 @@ export default async function Posts() {
     }));
 
     return (
-        <div className="max-w-4xl px-8 mx-auto">
+        <div className="max-w-7xl px-8 mx-auto">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-semibold pb-4">Posts</h1>
                 <Button><Link href={"/admin/posts/add-post"}>Add Post</Link></Button>

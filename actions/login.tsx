@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server"
 
 
 export async function login(prevState: any, formData: FormData) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const data = {
     email: formData.get('email') as string,
@@ -19,5 +19,5 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   revalidatePath("/admin/dashboard", "layout")
-  return { status: true, message: "Sucess" }
+  return { status: true, message: "Success" }
 }

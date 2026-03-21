@@ -3,7 +3,7 @@ import { FooterProps } from "@/interfaces";
 
 const Footer: React.FC<FooterProps> = () => {
     return (
-        <footer className={`max-w-4xl mx-auto px-4 mt-12 py-4 border-t border-gray-600`}>
+        <footer className={`max-w-5xl mx-auto px-4 mt-12 py-4 border-t border-gray-600`}>
             <div className={"pb-4 pt-2 text-xl font-bold"}>Kodweich</div>
             <div className={`flex flex-col sm:flex-row items-center justify-between`}>
                 <div className="flex flex-col self-start w-full">
