@@ -7,19 +7,22 @@ import { Button } from "@/components/ui/button";
 
 
 const ConnectForm = () => {
-    const form = useRef<any>();
+    const form = useRef<HTMLFormElement>(null);
     const [isSending, setIsSending] = useState<boolean>(false);
 
-    const sendEmail = (event: React.FormEvent) => {
+    const sendEmail = (event: React.SubmitEvent) => {
         event.preventDefault();
         setIsSending(true);
-    
+
+        if (!form.current) return;
+
         emailjs.sendForm(
             process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID as string,
             process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID as string,
-            form.current, process.env.NEXT_PUBLIC_EMAIL_PUBLIC_KEY
+            form.current,
+            process.env.NEXT_PUBLIC_EMAIL_PUBLIC_KEY
         ).then(() => {
-            form.current.reset();
+            form.current?.reset();
             setIsSending(false);
             toast.success('Thanku! We will revert you soon.', {duration: 5000})
         }, (error) => {
