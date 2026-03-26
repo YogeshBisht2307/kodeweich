@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url               = env("DATABASE_URL")
-  directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Articles {
@@ -35,6 +35,7 @@ model Users {
   image     String?
   createdAt BigInt
   updatedAt BigInt
+  role      UserRole   @default(Contributor)
   articles  Articles[]
 }
 
@@ -52,4 +53,9 @@ model Categories {
   slug      String     @unique
   createdAt BigInt
   articles  Articles[] @relation("ArticlesToCategories")
+}
+
+enum UserRole {
+  Primary
+  Contributor
 }

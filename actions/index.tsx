@@ -7,9 +7,12 @@ import {
     updateArticleById,
     updatePostStatus
 } from "@/prisma/queries/articles";
-import { createCategory, getCategoryBySlug } from "@/prisma/queries/categories";
-import { createTag, getTagBySlug } from "@/prisma/queries/tags";
-import { revalidatePath } from "next/cache";
+import { createCategory, getCategoryBySlug, deleteCategoryBySlug } from "@/prisma/queries/categories";
+import { createTag, getTagBySlug, deleteTagBySlug } from "@/prisma/queries/tags";
+import { createUser, deleteUserById, getUserByEmail, updateUserById } from "@/prisma/queries/users";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+type UserRole = "Primary" | "Contributor";
 
 
 export const editArticleAction = async (requestBody: EditArticleActionBody) => {
@@ -158,10 +161,25 @@ export const addCategoryAction = async (prevState: any, formData: FormData) => {
         }
 
         await createCategory(data.title, data.slug)
-        revalidatePath("/admin/categories", "page")
+        revalidateTag("categories", "max")
         return { status: true, message: "Category Created!" }
     } catch (error) {
         console.error("Unable to create category: " + error)
+        return { status: false, message: "Internal Server Error" }
+    }
+}
+
+export const deleteCategoryBySlugAction = async (slug: string) => {
+    if (!slug) {
+        return { status: false, message: "Category slug required" }
+    }
+
+    try {
+        await deleteCategoryBySlug(slug)
+        revalidateTag("categories", "max")
+        return { status: true, message: "Category deleted!" }
+    } catch (error) {
+        console.error("Unable to delete category: " + error)
         return { status: false, message: "Internal Server Error" }
     }
 }
@@ -188,10 +206,119 @@ export const addTagAction = async (prevState: any, formData: FormData) => {
         }
 
         await createTag(data.title, data.slug)
-        revalidatePath("/admin/tags", "page")
+        revalidateTag("tags", "max")
         return { status: true, message: "Tag Created!" }
     } catch (error) {
         console.error("Unable to create Tag: " + error)
         return { status: false, message: "Internal Server Error" }
     }
 }
+
+export const deleteTagBySlugAction = async (slug: string) => {
+    if (!slug) {
+        return { status: false, message: "Tag slug required" }
+    }
+
+    try {
+        await deleteTagBySlug(slug)
+        revalidateTag("tags", "max")
+        return { status: true, message: "Tag deleted!" }
+    } catch (error) {
+        console.error("Unable to delete tag: " + error)
+        return { status: false, message: "Internal Server Error" }
+    }
+}
+
+export const addUserAction = async (prevState: any, formData: FormData) => {
+    const data = {
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        role: formData.get("role") as UserRole,
+    };
+
+    if (!data.name) {
+        return { status: false, message: "User name required" };
+    }
+
+    if (!data.email) {
+        return { status: false, message: "User email required" };
+    }
+
+    if (!data.password) {
+        return { status: false, message: "User password required" };
+    }
+
+    if (data.role !== "Primary" && data.role !== "Contributor") {
+        return { status: false, message: "Invalid user role" };
+    }
+
+    try {
+        const existingUser = await getUserByEmail(data.email);
+        if (existingUser) {
+            return { status: false, message: "User already exists!" };
+        }
+
+        await createUser(crypto.randomUUID(), data.name, data.email, data.password, data.role);
+        revalidateTag("users", "max");
+        return { status: true, message: "User created!" };
+    } catch (error) {
+        console.error("Unable to create user: " + error);
+        return { status: false, message: "Internal Server Error" };
+    }
+};
+
+export const updateUserAction = async (requestBody: {
+    id: string;
+    name: string;
+    email: string;
+    role: UserRole;
+    password?: string;
+}) => {
+    const { id, name, email, role, password } = requestBody;
+
+    if (!id) {
+        return { status: false, message: "User id required" };
+    }
+
+    if (!name) {
+        return { status: false, message: "User name required" };
+    }
+
+    if (!email) {
+        return { status: false, message: "User email required" };
+    }
+
+    if (role !== "Primary" && role !== "Contributor") {
+        return { status: false, message: "Invalid user role" };
+    }
+
+    try {
+        const existingUser = await getUserByEmail(email);
+        if (existingUser && existingUser.id !== id) {
+            return { status: false, message: "Email already in use by another user" };
+        }
+
+        await updateUserById(id, name, email, role, password);
+        revalidateTag("users", "max");
+        return { status: true, message: "User updated!" };
+    } catch (error) {
+        console.error("Unable to update user: " + error);
+        return { status: false, message: "Internal Server Error" };
+    }
+};
+
+export const deleteUserByIdAction = async (id: string) => {
+    if (!id) {
+        return { status: false, message: "User id required" };
+    }
+
+    try {
+        await deleteUserById(id);
+        revalidateTag("users", "max");
+        return { status: true, message: "User deleted!" };
+    } catch (error) {
+        console.error("Unable to delete user: " + error);
+        return { status: false, message: "Internal Server Error" };
+    }
+};

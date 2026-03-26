@@ -1,6 +1,6 @@
 "use client"
 
-import React, { FormEvent } from 'react'
+import { useActionState, useEffect, useRef, type ComponentProps } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -14,12 +14,15 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useFormState, useFormStatus } from 'react-dom'
+import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 interface props {
     title: string,
     description: string,
+    triggerText?: string,
+    triggerVariant?: ComponentProps<typeof Button>["variant"],
     action: (prevState: any, formData: FormData) => Promise<{
         status: boolean;
         message: string;
@@ -45,21 +48,29 @@ function SubmitButton() {
     )
 }
 
-const AddModal = ({ title, description, action }: props) => {
+const AddModal = ({ title, description, action, triggerText = "Add", triggerVariant = "outline" }: props) => {
 
-    const [state, formAction] = useFormState(action, initialState);
-    if (!state.status && state.message !== "") {
-        toast.error(state.message);
-    }
+    const [state, formAction] = useActionState(action, initialState);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const router = useRouter();
+    
+    useEffect(() => {
+        if (!state.status && state.message !== "") {
+            toast.error(state.message);
+        }
 
-    if (state.status) {
-        toast.success(state.message);
-    }
+        if (state.status && state.message !== "") {
+            toast.success(state.message);
+            // Close the dialog after successful submission
+            closeButtonRef.current?.click();
+            router.refresh();
+        }
+    }, [state.status, state.message, router])
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Add</Button>
+                <Button className="cursor-pointer" variant={triggerVariant}>{triggerText}</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <form action={formAction} className="m-0 p-0">
@@ -77,7 +88,7 @@ const AddModal = ({ title, description, action }: props) => {
                             <Input
                                 id="title"
                                 name="title"
-                                defaultValue="Cloud"
+                                defaultValue=""
                                 className="col-span-3"
                             />
                         </div>
@@ -88,14 +99,14 @@ const AddModal = ({ title, description, action }: props) => {
                             <Input
                                 id="slug"
                                 name="slug"
-                                defaultValue="cloud"
+                                defaultValue=""
                                 className="col-span-3"
                             />
                         </div>
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button type="button" variant={"secondary"}>Cancel</Button>
+                            <Button ref={closeButtonRef} type="button" variant={"secondary"}>Cancel</Button>
                         </DialogClose>
                         <SubmitButton />
                     </DialogFooter>
