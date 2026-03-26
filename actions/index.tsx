@@ -11,6 +11,7 @@ import { createCategory, getCategoryBySlug, deleteCategoryBySlug } from "@/prism
 import { createTag, getTagBySlug, deleteTagBySlug } from "@/prisma/queries/tags";
 import { createUser, deleteUserById, getUserByEmail, updateUserById } from "@/prisma/queries/users";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { hashPassword } from "@/lib/password";
 
 type UserRole = "Primary" | "Contributor";
 
@@ -259,7 +260,8 @@ export const addUserAction = async (prevState: any, formData: FormData) => {
             return { status: false, message: "User already exists!" };
         }
 
-        await createUser(crypto.randomUUID(), data.name, data.email, data.password, data.role);
+        const hashedPassword = await hashPassword(data.password);
+        await createUser(data.name, data.email, hashedPassword, data.role);
         revalidateTag("users", "max");
         return { status: true, message: "User created!" };
     } catch (error) {
@@ -299,7 +301,12 @@ export const updateUserAction = async (requestBody: {
             return { status: false, message: "Email already in use by another user" };
         }
 
-        await updateUserById(id, name, email, role, password);
+        let hashedPassword: string | undefined;
+        if (password && password.trim() !== "") {
+            hashedPassword = await hashPassword(password);
+        }
+
+        await updateUserById(id, name, email, role, hashedPassword);
         revalidateTag("users", "max");
         return { status: true, message: "User updated!" };
     } catch (error) {

@@ -19,13 +19,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         notFound();
     }
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (!user) {
+    if (!session) {
         redirect("/admin/sign-in");
     }
 
-    if (!user.email) {
+    if (!session.user.email) {
         redirect("/admin/sign-in");
     }
 
@@ -63,7 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     <li className={`font-med md:text-md lg:text-md`}>Write a strong headline that accurately reflects the content of the article and grabs the reader&apos;s attention.</li>
                 </ul>
 
-                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={user.email.toString()} categoryOptions={categoryOptions} tagOptions={tagOptions} />
+                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={session.user.email.toString()} categoryOptions={categoryOptions} tagOptions={tagOptions} />
             </div>
         </>
     );

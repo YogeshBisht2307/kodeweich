@@ -61,7 +61,6 @@ export const getUserByEmail = unstable_cache(
 );
 
 export const createUser = async (
-    id: string,
     name: string,
     email: string,
     password: string,
@@ -69,7 +68,6 @@ export const createUser = async (
 ) => {
     return prisma.users.create({
         data: {
-            id: id,
             name: name,
             email: email,
             password: password,

@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 
 export default async function Posts() {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
         redirect("/admin/sign-in");
     }
 

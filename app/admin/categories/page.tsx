@@ -7,8 +7,8 @@ import { getAllCategories } from "@/prisma/queries/categories";
 
 export default async function Categories() {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
         redirect("/admin/sign-in");
     }
 
