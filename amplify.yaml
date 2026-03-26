@@ -15,3 +15,6 @@ frontend:
     paths:
       - .next/cache/**/*
       - .npm/**/*
+      - node_modules/**/*
+      - generated/prisma/**/*
+
