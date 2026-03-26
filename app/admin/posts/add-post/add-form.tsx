@@ -7,14 +7,17 @@ import toast from "react-hot-toast";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { createArticleAction } from "@/actions";
 import { Button } from "@/components/ui/button";
+import { MultiSelect } from "@/components/ui/multiselect";
 import Link from "next/link";
 
 
 interface props {
-    userEmail: string
+    userEmail: string,
+    categoryOptions: string[],
+    tagOptions: string[]
 }
 
-const AddArticleForm = ({ userEmail }: props) => {
+const AddArticleForm = ({ userEmail, categoryOptions, tagOptions }: props) => {
     const initialState = {
         title: "",
         slug: "",
@@ -26,8 +29,8 @@ const AddArticleForm = ({ userEmail }: props) => {
 
     const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
     const [content, setContent] = useState<string>("");
-    const [category, setCategory] = useState<string>("");
-    const [newTags, setTags] = useState<string>("");
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const router = useRouter()
 
@@ -38,10 +41,10 @@ const AddArticleForm = ({ userEmail }: props) => {
         try {
             const body = {
                 ...articleInfo,
-                ...{ categories: category.replace(/ /g, '').split(',') },
+                categories: selectedCategories,
                 content,
                 userEmail: userEmail,
-                tags: newTags.replace(/ /g, '').split(',')
+                tags: selectedTags
             }
 
             const response = await createArticleAction(body)
@@ -80,20 +83,24 @@ const AddArticleForm = ({ userEmail }: props) => {
                 value={articleInfo.featuredImage}
             />
             <div className='flex flex-col space-y-4 sm:space-y-0 sm:space-x-2 sm:flex-row'>
-                <textarea
-                    rows={2}
-                    className="block w-full p-3 text-sm border rounded-lg bg-muted text-muted-foreground"
-                    placeholder="Enter comma seperated category..."
-                    onChange={(e) => setCategory(e.target.value)}
-                    value={category}
-                />
-                <textarea
-                    rows={2}
-                    className="block w-full p-3 text-sm border rounded-lg bg-muted text-muted-foreground"
-                    placeholder="Enter comma seperated tags..."
-                    onChange={(e) => setTags(e.target.value)}
-                    value={newTags}
-                />
+                <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Categories</label>
+                    <MultiSelect
+                        options={categoryOptions}
+                        selected={selectedCategories}
+                        onSelectionChange={setSelectedCategories}
+                        placeholder="Select categories..."
+                    />
+                </div>
+                <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Tags</label>
+                    <MultiSelect
+                        options={tagOptions}
+                        selected={selectedTags}
+                        onSelectionChange={setSelectedTags}
+                        placeholder="Select tags..."
+                    />
+                </div>
             </div>
             <textarea
                 rows={4}

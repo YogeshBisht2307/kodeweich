@@ -9,15 +9,30 @@ import { getCategories } from "@/prisma/queries/categories";
 import { getTags } from "@/prisma/queries/tags";
 import { Metadata } from "next";
 import ArticleDetail from "./ArticleDetail";
+import ReadingView from "./ReadingView";
 
 export const metadata: Metadata = {
     title: "Kodeweich: Article Preview",
     description: "Article Preview"
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+    searchParams
+}: {
+    params: Promise<{ id: string }>,
+    searchParams: Promise<{ reading_mode?: string }>
+}) {
+    const { id } = await params;
+    const { reading_mode } = await searchParams;
+    const showSidebar = reading_mode !== "1";
+
+    if (!id) {
+        notFound();
+    }
+
     const [articleEntity, categoriesEntities, tagsEntities, relatedArticlesEntities] = await Promise.all([
-        getArticleByIdForAdmin(params.id),
+        getArticleByIdForAdmin(id),
         getCategories(),
         getTags(),
         getRelatedArticlesByFilters(null)
@@ -51,16 +66,14 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <p className={`font-med max-w-3xl md:text-md lg:text-md lg:mb-8 mb-6`}>
                     {article?.description}
                 </p>
-                <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-6`}>
-                    <div className={`col-span-2 relative min-h-screen`}>
-                        <ArticleDetail article={article} />
-                    </div>
-                    <div className={`sticky top-0 h-full`}>
-                        <ArticleWidgetCard relatedArticles={relatedArticles}/>
-                        <CategoryListCard categories={categoriesEntities} />
-                        <TagListCard tags={tagsEntities} />
-                    </div>
-                </div>
+                <ReadingView
+                    article={article}
+                    relatedArticles={relatedArticles}
+                    categories={categoriesEntities}
+                    tags={tagsEntities}
+                    id={id}
+                    showSidebar={showSidebar}
+                />
             </main>
         </>
     )

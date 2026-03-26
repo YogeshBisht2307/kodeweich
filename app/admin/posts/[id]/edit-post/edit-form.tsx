@@ -9,17 +9,20 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import { Article } from "@/interfaces";
 import { editArticleAction } from "@/actions";
 import { Button } from "@/components/ui/button";
+import { MultiSelect } from "@/components/ui/multiselect";
 
 
 interface props {
     article: Article,
     categories: string[],
     tags: string[],
-    userEmail: string
+    userEmail: string,
+    categoryOptions: string[],
+    tagOptions: string[]
 }
 
 
-const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
+const ArticleEditForm = ({ article, categories, tags, userEmail, categoryOptions, tagOptions }: props) => {
     const initialState = {
         title: article.title,
         slug: article.slug,
@@ -30,9 +33,9 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
     }
 
     const router = useRouter();
-    const [newTags, setTags] = useState<string>(tags.toString());
+    const [selectedTags, setSelectedTags] = useState<string[]>(tags);
     const [content, setContent] = useState<string>(article.content);
-    const [category, setCategory] = useState<string>(categories.toString());
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(categories);
     const [articleInfo, setArticleInfo] = useState<typeof initialState>(initialState);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
@@ -43,9 +46,9 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
         try {
             const body = {
                 ...articleInfo,
-                ...{ categories: category.replace(/ /g, '').split(',') },
+                categories: selectedCategories,
                 content,
-                tags: newTags.replace(/ /g, '').split(','),
+                tags: selectedTags,
                 id: article.id,
                 userEmail: userEmail
             };
@@ -87,20 +90,24 @@ const ArticleEditForm = ({ article, categories, tags, userEmail }: props) => {
                 value={articleInfo.featuredImage}
             />
             <div className='flex flex-col space-y-4 sm:space-y-0 sm:space-x-2 sm:flex-row'>
-                <textarea
-                    rows={2}
-                    className="block w-full p-3 text-sm border rounded-lg bg-muted text-muted-foreground"
-                    placeholder="Enter comma seperated category..."
-                    onChange={(e) => setCategory(e.target.value)}
-                    value={category}
-                />
-                <textarea
-                    rows={2}
-                    className="block w-full p-3 text-sm border rounded-lg bg-muted text-muted-foreground"
-                    placeholder="Enter comma seperated tags..."
-                    onChange={(e) => setTags(e.target.value)}
-                    value={newTags}
-                />
+                <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Categories</label>
+                    <MultiSelect
+                        options={categoryOptions}
+                        selected={selectedCategories}
+                        onSelectionChange={setSelectedCategories}
+                        placeholder="Select categories..."
+                    />
+                </div>
+                <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Tags</label>
+                    <MultiSelect
+                        options={tagOptions}
+                        selected={selectedTags}
+                        onSelectionChange={setSelectedTags}
+                        placeholder="Select tags..."
+                    />
+                </div>
             </div>
             <textarea
                 rows={4}

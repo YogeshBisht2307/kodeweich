@@ -4,6 +4,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 import { getArticleByIdForAdmin } from "@/prisma/queries/articles";
+import { getAllCategories } from "@/prisma/queries/categories";
+import { getAllTags } from "@/prisma/queries/tags";
 import ArticleEditForm from "./edit-form";
 
 export const metadata: Metadata = {
@@ -43,6 +45,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     const categoriesSlugs = categories.map(({ slug }: { slug: string }) => { return slug })
     const tagsSlugs = tags.map(({ slug }: { slug: string }) => { return slug })
 
+    const allCategories = await getAllCategories();
+    const allTags = await getAllTags();
+    const categoryOptions = allCategories.map((cat) => cat.slug);
+    const tagOptions = allTags.map((tag) => tag.slug);
+
     return (
         <>
             <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer />
@@ -56,7 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     <li className={`font-med md:text-md lg:text-md`}>Write a strong headline that accurately reflects the content of the article and grabs the reader&apos;s attention.</li>
                 </ul>
 
-                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={user.email.toString()} />
+                <ArticleEditForm article={article} categories={categoriesSlugs} tags={tagsSlugs} userEmail={user.email.toString()} categoryOptions={categoryOptions} tagOptions={tagOptions} />
             </div>
         </>
     );
