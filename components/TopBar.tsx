@@ -35,7 +35,7 @@ const TopBar: React.FC<TopBarProps> = () => {
         <header className={`max-w-5xl mx-auto px-4 py-4`}>
             <nav className={"flex flex-row items-center justify-between"}>
                 <div className={"w-[55px] sm:w-[60px] hover:scale-[1.1] transition-all py-3 px-1 rounded-full"}>
-                    <Link href="/"><Image src={theme == "light" ? CompanyLogo : CompanyLogoDark} height={40} alt={"Kodeweich Logo"}/></Link>
+                    <Link href="/"><Image src={theme == "light" ? CompanyLogo : CompanyLogoDark} height={40} loading="eager" alt={"Kodeweich Logo"}/></Link>
                 </div>
                 <ul className={"flex flex-row md:space-x-8"}>
                     <li>
