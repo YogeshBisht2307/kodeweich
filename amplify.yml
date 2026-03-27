@@ -4,10 +4,25 @@ frontend:
     preBuild:
       commands:
         - npm ci
+        - echo "DATABASE_URL=$DATABASE_URL" > .env
+        - echo "DIRECT_URL=$DIRECT_URL" > .env
+        - echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" > .env
+        - echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" > .env
+        - echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" > .env
+        - echo "GOOGLE_ADSENSE_PID=$GOOGLE_ADSENSE_PID" > .env
+        - echo "NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL" > .env
+        - echo "APP_URL=$APP_URL" > .env
+        - echo "NEXT_PUBLIC_EMAIL_PUBLIC_KEY=$NEXT_PUBLIC_EMAIL_PUBLIC_KEY" > .env
+        - echo "NEXT_PUBLIC_EMAIL_TEMPLATE_ID=$NEXT_PUBLIC_EMAIL_TEMPLATE_ID" > .env
+        - echo "COOKIE_PASSWORD=$COOKIE_PASSWORD" > .env
+        - echo "NEXT_PUBLIC_EMAIL_SERVICE_ID=$NEXT_PUBLIC_EMAIL_SERVICE_ID" > .env
+        - echo "COOKIE_NAME=$COOKIE_NAME" > .env
+        - echo "JWT_EXPIRES_IN=$JWT_EXPIRES_IN" > .env
+        - echo "JWT_SECRET=$JWT_SECRET" > .env
     build:
       commands:
         - npx prisma generate
-        - ls -la ./generated/prisma
+        - ls -la
         - npm run build
   artifacts:
     baseDirectory: .next
