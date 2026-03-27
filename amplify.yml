@@ -23,7 +23,7 @@ frontend:
       commands:
         - npx prisma generate
         - npm run build
-        - cp -R ./generated /ROOT/
+        - cp -R ./generated/prisma /tmp/prisma-engines
   artifacts:
     baseDirectory: .next
     files:
