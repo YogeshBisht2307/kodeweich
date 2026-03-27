@@ -22,8 +22,8 @@ frontend:
     build:
       commands:
         - npx prisma generate
-        - pwd
         - npm run build
+        - cp -R generated .next/generated/
   artifacts:
     baseDirectory: .next
     files:
