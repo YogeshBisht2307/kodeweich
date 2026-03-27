@@ -21,9 +21,7 @@ frontend:
         - echo "JWT_SECRET=$JWT_SECRET" > .env
     build:
       commands:
-        - npx prisma generate
         - npm run build
-        - cp -R ./generated/prisma /tmp/prisma-engines
   artifacts:
     baseDirectory: .next
     files:
