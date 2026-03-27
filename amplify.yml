@@ -4,9 +4,10 @@ frontend:
     preBuild:
       commands:
         - npm ci
-        - npx prisma generate
+        - echo "DATABASE_URL=$DATABASE_URL" >> .env
     build:
       commands:
+        - npx prisma generate
         - npm run build
   artifacts:
     baseDirectory: .next
@@ -14,9 +15,5 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - .next/cache/**/*
-      - .npm/**/*
       - node_modules/**/*
-      - generated/prisma/**/*
-
 
