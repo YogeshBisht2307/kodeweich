@@ -22,7 +22,6 @@ frontend:
 
     build:
       commands:
-        - cat .env
         - npm run build
   artifacts:
     baseDirectory: .next
