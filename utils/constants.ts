@@ -75,9 +75,15 @@ export const CACHE_TAGS = {
 
 // Routes
 export const ROUTES = {
+  // Admin routes
   ADMIN_POSTS: "/admin/posts",
   ADMIN_USERS: "/admin/users",
   ADMIN_CATEGORIES: "/admin/categories",
   ADMIN_TAGS: "/admin/tags",
   ADMIN_SIGN_IN: "/admin/sign-in",
+  // Public routes
+  HOME: "/",
+  BLOGS: "/blogs",
+  BLOGS_CATEGORIES: "/blogs/categories",
+  BLOGS_TAGS: "/blogs/tags",
 } as const;

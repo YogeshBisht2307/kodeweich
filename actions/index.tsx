@@ -56,6 +56,8 @@ export const editArticleAction = async (requestBody: EditArticleActionBody): Pro
         );
 
         revalidatePath(ROUTES.ADMIN_POSTS, "page");
+        revalidatePath(ROUTES.HOME, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
         return { status: true, message: SUCCESS_MESSAGES.ARTICLE_UPDATED };
     } catch (error) {
         console.error("Unable to update post: " + error);
@@ -104,6 +106,8 @@ export const createArticleAction = async (requestBody: CreateArticleActionBody):
         );
 
         revalidatePath(ROUTES.ADMIN_POSTS, "page");
+        revalidatePath(ROUTES.HOME, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
         return { status: true, message: SUCCESS_MESSAGES.ARTICLE_CREATED };
     } catch (error) {
         console.error("Unable to create post: " + error);
@@ -114,6 +118,9 @@ export const createArticleAction = async (requestBody: CreateArticleActionBody):
 export const updatePostStatusAction = async (id: string, published: boolean): Promise<ActionResponse> => {
     try {
         await updatePostStatus(id, { published: published });
+        revalidatePath(ROUTES.ADMIN_POSTS, "page");
+        revalidatePath(ROUTES.HOME, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
         return { status: true, message: SUCCESS_MESSAGES.POST_STATUS_UPDATED };
     } catch (error) {
         console.error("Unable to update post status: " + error);
@@ -124,6 +131,9 @@ export const updatePostStatusAction = async (id: string, published: boolean): Pr
 export const deletePostByIdAction = async (id: string): Promise<ActionResponse> => {
     try {
         await hardDeletePostById(id);
+        revalidatePath(ROUTES.ADMIN_POSTS, "page");
+        revalidatePath(ROUTES.HOME, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
         return { status: true, message: SUCCESS_MESSAGES.ARTICLE_DELETED };
     } catch (error) {
         console.error("Unable to delete post: " + error);
@@ -154,6 +164,9 @@ export const addCategoryAction = async (prevState: any, formData: FormData): Pro
 
         await createCategory(data.title, data.slug);
         revalidateTag(CACHE_TAGS.CATEGORIES, "max");
+        revalidatePath(ROUTES.BLOGS_CATEGORIES, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
+        revalidatePath(ROUTES.HOME, "page");
         return { status: true, message: SUCCESS_MESSAGES.CATEGORY_CREATED };
     } catch (error) {
         console.error("Unable to create category: " + error);
@@ -169,6 +182,9 @@ export const deleteCategoryBySlugAction = async (slug: string): Promise<ActionRe
     try {
         await deleteCategoryBySlug(slug);
         revalidateTag(CACHE_TAGS.CATEGORIES, "max");
+        revalidatePath(ROUTES.BLOGS_CATEGORIES, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
+        revalidatePath(ROUTES.HOME, "page");
         return { status: true, message: SUCCESS_MESSAGES.CATEGORY_DELETED };
     } catch (error) {
         console.error("Unable to delete category: " + error);
@@ -199,6 +215,9 @@ export const addTagAction = async (prevState: any, formData: FormData): Promise<
 
         await createTag(data.title, data.slug);
         revalidateTag(CACHE_TAGS.TAGS, "max");
+        revalidatePath(ROUTES.BLOGS_TAGS, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
+        revalidatePath(ROUTES.HOME, "page");
         return { status: true, message: SUCCESS_MESSAGES.TAG_CREATED };
     } catch (error) {
         console.error("Unable to create Tag: " + error);
@@ -214,6 +233,9 @@ export const deleteTagBySlugAction = async (slug: string): Promise<ActionRespons
     try {
         await deleteTagBySlug(slug);
         revalidateTag(CACHE_TAGS.TAGS, "max");
+        revalidatePath(ROUTES.BLOGS_TAGS, "page");
+        revalidatePath(ROUTES.BLOGS, "page");
+        revalidatePath(ROUTES.HOME, "page");
         return { status: true, message: SUCCESS_MESSAGES.TAG_DELETED };
     } catch (error) {
         console.error("Unable to delete tag: " + error);
